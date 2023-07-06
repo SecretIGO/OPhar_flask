@@ -9,7 +9,32 @@
     </head>
 
     <body>
-        <h1>User Management</h1>
+        <form action="/insert" method="POST">
+            <label>First Name:</label>
+            <input type="text" name="fname" placeholder="first name...">
+            <label>Middle Name:</label>
+            <input type="text" name="mname" placeholder="middle name...">
+            <label>Last Name:</label>
+            <input type="text" name="lname" placeholder="last name...">
+            
+    <br><br><label>Username:</label>
+            <input type="text" name="username" placeholder="username">
+            
+    <br><br><label>What Role do you want to sign up for?:</label>
+            <select name="role" id="">
+                <option value="1">Customer</option>
+                <option value="2">Staff</option>
+                <option value="3">Courier</option>
+            </select>
+    
+    <br><br><label>Email:</label>
+            <input type="email" name="email" placeholder="email...">
+    <br><br><label>Password:</label>
+                    <input type="password" name="password" placeholder="password...">
+
+            
+    <br><br><input type="submit" value="Add User">
+        </form>
         
     </body>
 </html>
