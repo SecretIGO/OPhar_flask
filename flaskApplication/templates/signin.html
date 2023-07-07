@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>SignIn</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/style.css') }}">
+    </head>
+    <body>
+        <h1>User Management</h1>
+        
+        <div class="signin_form">
+            <form action="/signin" method="POST" >
+                <label>Username:</label>
+                <input type="text" name="username"><br><br>
+                
+                <label>Password:</label>
+                <input type="password" name="password"><br><br>
+                
+                <input type="submit" id="submit" value="signin">
+            </form>
+        </div>
+        
+    </body>
+</html>

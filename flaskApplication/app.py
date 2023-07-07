@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, redirect
-from flask_mysqldb import MySQL as mysql
+from flask import Flask, render_template, request, redirect, url_for
+from flask_mysqldb import MySQL
 from datetime import date
+
+import dbcon_user
 
 app = Flask(__name__)
 
@@ -9,27 +11,15 @@ app.config[ 'MYSQL_USER' ] = "root"
 app.config[ 'MYSQL_PASSWORD' ] = "root"
 app.config[ 'MYSQL_DB' ] = "db_onphar"
 
-mydb = mysql(app)
+mydb =  MySQL(app)
 
 @app.route('/')
 def hello():
-    return render_template("index.html")
+    return render_template("signup.html")
 
-@app.route('/insert', methods = ['POST'])
-def determine_role(role):
-    if role == 1:
-                return "user_customer"
-    if role == 2:
-                return "user_pharmacy_staff"
-    if role == 3:
-                return "user_courier"
-    if role == 4:
-                return "user_pharmacy_manager"
-    if role == 5:
-                return "user_admin"
-
-def addUser():
-    if request.method == "POST":
+@app.route('/register_user', methods = ['POST'])
+def register_user():
+    if request.method == "POST" and 'fname' in request.form and 'mname' in request.form and 'lname' in request.form and 'username' in request.form and 'email' in request.form and 'password' in request.form and 'role' in request.form:
         fname = request.form['fname']
         mname = request.form['mname']
         lname = request.form['lname']
@@ -37,16 +27,61 @@ def addUser():
         email = request.form['email']
         password = request.form['password']
         role = request.form['role']
-        mycursor = mysql.connection.cursor()
+        mycursor = mydb.connection.cursor()
 
-        str_role = determine_role(role)
-        query = ("INSERT INTO " + str_role + " (firstname, middlename, lastname, username, password, email, joinDate, id_role, activeStatus) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)")
-        val = (fname, mname, lname, username, password, email, date.today(), role, 1)
+        username_warning = dbcon_user.find_username(username, role, mycursor)
+        if username_warning:
+            return render_template('signup.html', 
+                                   username_warning = "Username Already Exists!",
+                                   fname = fname,
+                                   mname = mname,
+                                   lname = lname,
+                                   username = username,
+                                   email = email,
+                                   password = password,
+                                   role = role)
         
-        mycursor.execute(query, val)
-        mycursor.execute("COMMIT")
+        email_warning = dbcon_user.validate_email(email)
+        if email_warning:
+            return render_template('signup.html', 
+                                   email_warning = email_warning, 
+                                   fname = fname,
+                                   mname = mname,
+                                   lname = lname,
+                                   username = username,
+                                   email = email,
+                                   password = password,
+                                   role = role)
+
+        password_warning = dbcon_user.validate_password(password)
+        if password_warning:
+            return render_template('signup.html', 
+                                   password_warning = password_warning,
+                                   fname = fname,
+                                   mname = mname,
+                                   lname = lname,
+                                   username = username,
+                                   email = email,
+                                   password = password,
+                                   role = role) 
         
-        
+        dbcon_user.addUser((fname, mname, lname), username, password, email, role, mycursor)
+
+        return render_template('signin.html')
+    
+@app.route('/find_user', methods = ['GET', 'POST'])
+def find_user():
+    if request.method == "POST":
+        username = request.form['username']
+        role = request.form['role']
+        mycursor = mydb.connection.cursor()
+        result = dbcon_user.find_username(username, role, mycursor)
+
+@app.route('/login_user', methods = ['GET','POST'])
+def login_user():
+    if request.method == "POST":
+        username = request.form['username']
+        password = request.form['password']
 
 if __name__ == '__main__':
     app.run(debug=True)

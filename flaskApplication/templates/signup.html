@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <title>SignUp</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+
+    <body>
+        <form action="{{url_for('register_user')}}" method="POST">
+
+            <br><br><label>First Name:</label>
+            <input type="text" name="fname" placeholder="first name..." value = "{{fname}}" required>
+
+            <br><br><label>Middle Name:</label>
+            <input type="text" name="mname" placeholder="middle name..." value = "{{mname}}" required>
+
+            <br><br><label>Last Name:</label>
+            <input type="text" name="lname" placeholder="last name..." value = "{{lname}}" required>
+            
+            
+            <br><br><label>Username:</label>
+            {% if username_warning %}
+            <div class="warning">
+                {{ username_warning }}
+            </div>
+            {% endif %}
+            <input type="text" name="username" placeholder="username" value = "{{username}}" required>
+            
+            <br><br><label>What Role do you want to sign up for?:</label>
+            <select name="role" id="role" value = {{role}}>
+                <option value="1">Customer</option>
+                <option value="2">Staff</option>
+                <option value="3">Courier</option>
+            </select>
+    
+            <br><br><label>Email:</label>
+            {% if email_warning %}
+            <div class="warning">
+                {{ email_warning }}
+            </div>
+            {% endif %}
+            <input type="email" name="email" placeholder="email..." value = "{{email}}" required>
+
+            <br><br><label>Password:</label>
+            {% if password_warning %}
+            <div class="warning">
+                {{ password_warning }}
+            </div>
+            {% endif %}
+            <input type="password" name="password" placeholder="password..." value = "{{password}}" required>
+
+            <br><br><input type="submit" value="Add User">
+        </form>
+        
+    </body>
+</html>
