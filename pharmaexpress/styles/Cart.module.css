@@ -1,0 +1,44 @@
+.titles, .cartItem{
+    @apply text-2xl font-light;
+    display: grid;
+    align-items: center;
+    grid-template-columns: 3fr 1fr 1fr 1fr;
+    column-gap: .5rem;
+}
+
+.titles{
+    @apply py-3;
+}
+
+.cartItem{
+    @apply border-t border-solid border-black;
+}
+
+.titles, .product-title{
+    padding-left: 0.5rem;
+}
+
+.titles, .total{
+    padding-right: 0.5rem;
+    justify-self: right;
+}
+
+.cartProduct{
+    @apply flex;
+}
+
+.imgStyle{
+    width: 200px;
+    max-width: 100%;
+    margin-right: 1rem;
+}
+
+.totalPrice{
+    justify-self: right;
+    padding:0.5rem;
+    font-weight: 700;
+}
+
+.buttonStyle{
+    @apply w-48 max-w-full h-10 rounded-md tracking-wider bg-blue-600 text-white font-bold mx-2;
+}

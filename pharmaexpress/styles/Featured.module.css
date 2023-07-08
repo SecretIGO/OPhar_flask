@@ -1,0 +1,18 @@
+.container{
+    @apply w-full h-full bg-blue-300 border rounded-2xl px-5 pb-5 items-center flex flex-col items-center shadow-2xl;
+    position:relative;
+}
+
+.wrapper{
+    width: 100%;
+    height: 70vh;
+    padding: 1.25rem;
+}
+
+.featured_bg{
+    @apply h-full rounded-2xl bg-blue-600 flex items-center;
+    /*background-image: url("https://media.discordapp.net/attachments/1108976165772853358/1124657853853093948/pharmacy-canada-prescription-drugs_1.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    */
+}
