@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_mysqldb import MySQL
 from flask_cors import CORS
 from datetime import date
@@ -6,6 +6,7 @@ from datetime import date
 import dbcon_user
 
 app = Flask(__name__)
+
 CORS(app)
 
 app.config[ 'MYSQL_HOST' ] = "localhost"
@@ -15,15 +16,20 @@ app.config[ 'MYSQL_DB' ] = "db_onphar"
 
 mydb =  MySQL(app)
 
+@app.route('/')
+def index():
+    return render_template("../pharmaexpress/index.js")
+
+
 @app.route('/api/test')
 def hello():
-    return {
+    return jsonify({
         "members" : [
             "members1",
             "members2",
             "members3"
         ]
-    }
+    })
 
 @app.route('/register_user', methods = ['POST'])
 def register_user():
@@ -76,14 +82,32 @@ def register_user():
         dbcon_user.addUser((fname, mname, lname), username, password, email, role, mycursor)
 
         return render_template('signin.html')
-    
-@app.route('/find_user', methods = ['GET', 'POST'])
+
+@app.route('/api/find_user', methods = ['GET', 'POST'])
 def find_user():
-    if request.method == "POST":
-        username = request.form['username']
-        role = request.form['role']
-        mycursor = mydb.connection.cursor()
-        result = dbcon_user.find_username(username, role, mycursor)
+    mycursor = mydb.connection.cursor()
+    result = dbcon_user.find_username("markRover12", 1, mycursor)
+
+    return jsonify(result)
+
+@app.route('/api/get_userinfo', methods = ['GET', 'POST'])
+def get_userinfo():
+    mycursor = mydb.connection.cursor()
+    result = dbcon_user.get_userInformation("johndoe", mycursor)
+
+    return jsonify(result)
+
+@app.route('/api/submit_username', methods=['GET','POST'])
+def submit_getuserinfo():
+    data = request.get_json(force=True)
+    username = data['username']
+    mycursor = mydb.connection.cursor()
+
+    result = dbcon_user.get_userInformation(username, mycursor)
+
+    return jsonify(result)
+
+    pass
 
 @app.route('/login_user', methods = ['GET','POST'])
 def login_user():
