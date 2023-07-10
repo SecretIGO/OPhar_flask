@@ -1,29 +1,52 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_mysqldb import MySQL
 from flask_cors import CORS
 from datetime import date
+import mysql.connector
 
 import dbcon_user
 
 app = Flask(__name__)
+mysql = MySQL()
 CORS(app)
 
 app.config[ 'MYSQL_HOST' ] = "localhost"
 app.config[ 'MYSQL_USER' ] = "root"
-app.config[ 'MYSQL_PASSWORD' ] = "root"
+app.config[ 'MYSQL_PASSWORD' ] = ""
 app.config[ 'MYSQL_DB' ] = "db_onphar"
 
 mydb =  MySQL(app)
+mycursor = mydb.connection.cursor()
+
+@app.route('/')
+def start():
+    return render_template('home.js')
 
 @app.route('/api/test')
 def hello():
-    return {
-        "members" : [
-            "members1",
-            "members2",
-            "members3"
-        ]
-    }
+    return jsonify({
+        "members" : [{
+            "member1" : [{
+                "id" : 1,
+                "name" : "Allen",
+                "username" : "Allen531",
+                "password" : "12345",
+                "type": "Customer",
+            }],
+            "member2" : [{
+                "id" : 2,
+                "name" : "Jack",
+                "username" : "Jack213",
+                "password" : "qwerty",
+                "type": "StoreManager",
+            }],
+        }]
+    })
+
+@app.route('/api/return_user')
+def return_user():
+    user = dbcon_user.find_username("markRover12", 1, mycursor)
+    return jsonify (user)
 
 @app.route('/register_user', methods = ['POST'])
 def register_user():
