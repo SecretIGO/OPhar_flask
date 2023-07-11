@@ -7,64 +7,37 @@ import mysql.connector
 import dbcon_user
 
 app = Flask(__name__)
-<<<<<<< HEAD
 
-=======
 mysql = MySQL()
->>>>>>> 32c87aabbef04493bf1687cf6196f83935fa59d2
+
 CORS(app)
 
 app.config[ 'MYSQL_HOST' ] = "localhost"
 app.config[ 'MYSQL_USER' ] = "root"
-app.config[ 'MYSQL_PASSWORD' ] = ""
+app.config[ 'MYSQL_PASSWORD' ] = "root"
 app.config[ 'MYSQL_DB' ] = "db_onphar"
 
 mydb =  MySQL(app)
-mycursor = mydb.connection.cursor()
-
-@app.route('/')
-def start():
-    return render_template('home.js')
 
 @app.route('/')
 def index():
-    return render_template("../pharmaexpress/index.js")
+    return "Heehee"
 
 
 @app.route('/api/test')
 def hello():
     return jsonify({
-<<<<<<< HEAD
         "members" : [
             "members1",
             "members2",
             "members3"
         ]
     })
-=======
-        "members" : [{
-            "member1" : [{
-                "id" : 1,
-                "name" : "Allen",
-                "username" : "Allen531",
-                "password" : "12345",
-                "type": "Customer",
-            }],
-            "member2" : [{
-                "id" : 2,
-                "name" : "Jack",
-                "username" : "Jack213",
-                "password" : "qwerty",
-                "type": "StoreManager",
-            }],
-        }]
-    })
 
 @app.route('/api/return_user')
 def return_user():
     user = dbcon_user.find_username("markRover12", 1, mycursor)
     return jsonify (user)
->>>>>>> 32c87aabbef04493bf1687cf6196f83935fa59d2
 
 @app.route('/register_user', methods = ['POST'])
 def register_user():
