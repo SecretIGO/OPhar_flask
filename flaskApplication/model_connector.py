@@ -13,6 +13,10 @@ mydb = pymysql.connect(
 
 mycursor = mydb.cursor()
 
+dbcon_user.login_user("Jokowan","Jokowan23",mycursor)
+
+# print(dbcon_user.get_userID("Jokowan", mycursor))
+
 # result = dbcon_user.find_username("", mycursor)
 
 # print(result)

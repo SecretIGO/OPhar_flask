@@ -1,47 +1,56 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-function MyForm() {
+function LoginForm() {
   const [username, setUsername] = useState('');
-  const [submittedUsername, setSubmittedUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const handleChange = (e) => {
+  const handleUsernameChange = (e) => {
     setUsername(e.target.value);
+    console.log(username)
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    console.log(password)
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.post('http://127.0.0.1:8080/api/submit_username', { username }, {
-      headers: {
-        'Content-Type': 'application/json'
-      }}
-      )
+    axios.post('http://localhost:8080/api/login', { username, password })
       .then(response => {
-        console.log('Success:', response.data);
-        setSubmittedUsername(response.data.message);
+        const { success } = response.data;
+        if (success) {
+          window.location.href = '/home';
+        } else {
+          setError(response.data.error);
+        }
       })
       .catch(error => {
         console.error('Error:', error);
+        setError('An error occurred. Please try again later.');
       });
   };
 
   return (
     <div>
+      <h1>Login</h1>
+      {error && <p>{error}</p>}
       <form onSubmit={handleSubmit}>
-        <input type="text" name="username" value={username} onChange={handleChange} />
-        <button type="submit">Submit</button>
-      </form>
-      
-      {submittedUsername && (
         <div>
-          <h2>Submitted Username:</h2>
-          <p>{submittedUsername}</p>
-          {console.log('Submitted Username:', submittedUsername)}
+          <label>Username:</label>
+          <input type="text" value={username} onChange={handleUsernameChange} />
         </div>
-      )}
+        <div>
+          <label>Password:</label>
+          <input type="password" value={password} onChange={handlePasswordChange} />
+        </div>
+        <button type="submit">Login</button>
+      </form>
     </div>
   );
 }
 
-export default MyForm;
+export default LoginForm;
