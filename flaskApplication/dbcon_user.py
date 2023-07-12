@@ -35,7 +35,7 @@ def find_username(username, mycursor):
   try:
     i = 1
     result = None
-    while (result == None or i > get_roleCount(mycursor)):
+    while (result == None):
       str_role = str(determine_role(i))
       
       query = ("SELECT username FROM " + str_role + " WHERE BINARY username=%s")
@@ -131,14 +131,15 @@ def login_user(username, password, mycursor):
     status = False
     result = None
     str_role = None
+    
     i = 1
-    while result == None or i > get_roleCount(mycursor):
-      str_role = determine_role(i)
+    while result == None:
       result = str(find_username(username, mycursor)[0])
-      i += 1
+      print(result)
+      
+      i+=1
+    str_role = determine_role(i)
 
-    print(result)
-    print(i)
     if result != "None":
       user_password = find_password(username, str_role, mycursor)
 
