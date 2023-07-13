@@ -1,10 +1,12 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_mysqldb import MySQL
 from datetime import date
+from flask_cors import CORS
 
 import dbcon_user
 
 app = Flask(__name__)
+CORS(app)
 
 app.config[ 'MYSQL_HOST' ] = "localhost"
 app.config[ 'MYSQL_USER' ] = "root"
@@ -13,9 +15,11 @@ app.config[ 'MYSQL_DB' ] = "db_onphar"
 
 mydb =  MySQL(app)
 
-@app.route('/')
-def hello():
-    return render_template("signup.html")
+@app.route('/api/home', methods=['GET'])
+def return_home():
+    return jsonify({
+        'message' : " SANA GUMANA KA "
+    })
 
 @app.route('/register_user', methods = ['POST'])
 def register_user():
@@ -84,4 +88,4 @@ def login_user():
         password = request.form['password']
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=8080)

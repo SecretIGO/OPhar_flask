@@ -1,14 +1,12 @@
 .input_group{
-    @apply w-full flex border rounded-2xl;
+    @apply w-full flex rounded-full;
     position:relative;
 }
 
 .input_text{
-    @apply w-full py-1 px-2 border rounded-2xl bg-slate-50;
-    @apply focus:outline-none;
+    @apply w-full py-1 px-3 rounded-full bg-slate-50 focus:outline-none;
 }
 
 .button{
-    @apply w-2/5 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-2xl;
-    @apply py-3 text-white text-lg;
+    @apply w-full bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full font-bold  py-2 text-white shadow-2xl;
 }

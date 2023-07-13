@@ -1,17 +1,18 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
+import { useState, useEffect } from "react"
 
-const inter = Inter({ subsets: ['latin'] })
+const [message, setMessage] = useState("LOADING")
+
+useEffect(() => {
+  fetch('http://localhost:8080/api/home').then(
+    (response) => response.json())
+    .then((data) => {
+      setMessage(data.message)
+    }
+  )
+})
 
 export default function Home() {
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <h1 class="text-3xl font-bold underline">
-        Hello world!
-     </h1>
-
-    </main>
+    <h1>{message}</h1>
   )
 }

@@ -11,13 +11,13 @@ export default function Login(){
             </Head>
             <main>
                 <div>
-                    <section className='w-3/4 mx-auto flex flex-col gap-10'>
+                    <section className='w-3/4 mx-auto flex flex-col gap-8 text-white'>
                         <div className='title'>
-                            <h1 className='text-4xl font-bold py-4'>Welcome!</h1>
-                            <p className='text-2xl'>Log in</p>
+                            <h1 className='text-3xl font-bold py-2 uppercase'>welcome</h1>
+                            <h2 className='font-light'>Enter your username and password to start browsing!</h2>
                         </div>
 
-                        <form className='flex flex-col gap-5 items-center'>
+                        <form className='flex flex-col gap-8 items-center'>
                             <div className={styles.input_group}>
                                 <input className={styles.input_text} type='email' name='email' placeholder='Email'></input>
                             </div>
@@ -34,7 +34,7 @@ export default function Login(){
                                 </Link>
                             </div>
 
-                            <p className='text-center'> 
+                            <p className='text-center font-light'> 
                                 Don't have an account? Sign up <Link href={'/register'} className = 'text-cyan-400 underline'>here</Link>
                             </p>
                         </form>
