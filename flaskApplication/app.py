@@ -13,6 +13,7 @@ app.config[ 'MYSQL_USER' ] = "root"
 app.config[ 'MYSQL_PASSWORD' ] = "root"
 app.config[ 'MYSQL_DB' ] = "db_onphar"
 
+# hello
 mydb =  MySQL(app)
 
 @app.route('/api/home', methods=['GET'])
