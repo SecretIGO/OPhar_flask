@@ -7,7 +7,7 @@ import mysql.connector
 import dbcon_user
 
 app = Flask(__name__)
-app.secret_key = 'egg'
+app.secret_key = 'baconandeggs'
 
 mysql = MySQL()
 
@@ -45,9 +45,26 @@ def return_user():
 @app.route('/api/find_user', methods = ['GET', 'POST'])
 def find_user():
     mycursor = mydb.connection.cursor()
-    result = dbcon_user.find_username("markRover12", mycursor)
+    data = request.get_json()
+    username = data['username']
+    result = dbcon_user.find_username(username, mycursor)
 
     return jsonify(result)
+
+@app.route('/api/signup', methods = ['GET', 'POST'])
+def signup():
+    mycursor = mydb.connection.cursor()
+    data = request.get_json()
+    firstname = data['firstname']
+    middlename = data['middlename']
+    lastname = data['lastname']
+    username = data['username']
+    password = data['password']
+    email = data['email']
+    id_role = data['id_role']
+
+    dbcon_user.addUser((firstname, middlename, lastname), username, password, email, id_role, mycursor)
+
 
 @app.route('/api/login', methods=['POST', 'GET'])
 def login():
@@ -69,7 +86,9 @@ def login():
 @app.route('/api/get_userinfo', methods = ['GET', 'POST'])
 def get_userinfo():
     mycursor = mydb.connection.cursor()
-    result = dbcon_user.get_userInformation("johndoe", mycursor)
+    data = request.get_json()
+    username = data['username']
+    result = dbcon_user.get_userInformation(username, mycursor)
 
     return jsonify(result)
 

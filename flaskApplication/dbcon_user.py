@@ -21,28 +21,45 @@ def get_roleCount(mycursor):
 def determine_role(role):
   if role == 1:
     return "user_customer"
-  if role == 2:
+  elif role == 2:
     return "user_pharmacy_staff"
-  if role == 3:
+  elif role == 3:
     return "user_courier"
-  if role == 4:
+  elif role == 4:
     return "user_pharmacy_manager"
-  if role == 5:
+  elif role == 5:
     return "user_admin"
-  
-def find_username(username, mycursor):
+  else:
+    return None
 
+def get_role(username, mycursor):
   try:
+
     i = 1
     result = None
     while (result == None):
       str_role = str(determine_role(i))
       
-      query = ("SELECT username FROM " + str_role + " WHERE BINARY username=%s")
+      query = ("SELECT id_role FROM " + str_role + " WHERE BINARY username=%s")
       mycursor.execute(query, (username,))
       result = mycursor.fetchone()
 
       i+=1
+
+    return result[0]
+  
+  except Exception as e:
+    print("Error exception : ", e)
+
+def find_username(username, mycursor):
+
+  try:
+    id_role = get_role(username, mycursor)
+    str_role = str(determine_role(id_role))
+
+    query = ("SELECT username FROM " + str_role + " WHERE BINARY username=%s")
+    mycursor.execute(query, (username,))  
+    result = mycursor.fetchone()
 
     if result:
       return result
@@ -52,16 +69,23 @@ def find_username(username, mycursor):
   except Exception as e:
     print("Error exception : ", e)
 
-def find_password(username, str_role, mycursor):
-  try:
-    query = ("SELECT password FROM " + str_role + " WHERE username=%s")
-    mycursor.execute(query, (username,))      
-    temp_password = str(mycursor.fetchone()[0])
+def find_password(username, mycursor):
 
-    return temp_password
+  try:
+    id_role = get_role(username, mycursor)
+    str_role = str(determine_role(id_role))
+      
+    query = ("SELECT password FROM " + str_role + " WHERE BINARY username=%s")
+    mycursor.execute(query, (username,))
+    result = mycursor.fetchone()
+
+    if result:
+      return result
+    else:
+      return None
+
   except Exception as e:
     print("Error exception : ", e)
-
 
 # ______________________________________________________________________________________________
 # - - - - - - - - - - - VALIDATE EMAIL (signup)
@@ -130,7 +154,6 @@ def login_user(username, password, mycursor):
   try:
     status = False
     result = None
-    str_role = None
     
     i = 1
     while result == None:
@@ -138,17 +161,18 @@ def login_user(username, password, mycursor):
       print(result)
       
       i+=1
-    str_role = determine_role(i)
 
     if result != "None":
-      user_password = find_password(username, str_role, mycursor)
-
-      print(str_role)
+      user_password = find_password(username, mycursor)
       
       print(password)
-      print(user_password)
-      if password == user_password:
+      print(user_password[0])
+      if password == user_password[0]:
         print("User identified!")
+
+        id_role = get_role(username, mycursor)
+        str_role = str(determine_role(id_role))
+
         query = ("UPDATE " + str_role + " SET activeStatus=1 WHERE username = %s")
         mycursor.execute(query, (username,))
         mycursor.execute("COMMIT")
