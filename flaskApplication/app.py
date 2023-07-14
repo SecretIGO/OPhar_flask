@@ -2,7 +2,6 @@ from flask import Flask, render_template, session, request, redirect, url_for, j
 from flask_mysqldb import MySQL
 from flask_cors import CORS
 from datetime import date
-import mysql.connector
 
 import dbcon_user
 

@@ -45,9 +45,6 @@ export default function Login(){
 
     return(
         <Layout>
-            <Head>
-                <title>Login</title>
-            </Head>
             <main>
                 <div>
                     <section className='w-3/4 mx-auto flex flex-col gap-8 text-white'>
@@ -56,7 +53,7 @@ export default function Login(){
                             <h2 className='font-light'>Enter your username and password to start browsing!</h2>
                         </div>
 
-                        <form className='flex flex-col gap-8 items-center'>
+                        <form className='flex flex-col gap-8 items-center text-black' onSubmit={handleSubmit}>
                             <div className={styles.input_group}>
                                 <input className={styles.input_text} type="text" value={username} placeholder='Username' onChange={handleUsernameChange} />
                             </div>
