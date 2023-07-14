@@ -32,9 +32,9 @@ export default function Login(){
         .then(response => {
             const { success } = response.data;
             if (success) {
-            window.location.href = '/home';
+                window.location.href = '/home';
             } else {
-            setError(response.data.error);
+                setError(response.data.error);
             }
         })
         .catch(error => {

@@ -2,15 +2,11 @@ from flask import Flask, render_template, session, request, redirect, url_for, j
 from flask_mysqldb import MySQL
 from flask_cors import CORS
 from datetime import date
-import mysql.connector
 
 import dbcon_user
 
 app = Flask(__name__)
 app.secret_key = 'baconandeggs'
-
-mysql = MySQL()
-
 CORS(app)
 
 app.config[ 'MYSQL_HOST' ] = "localhost"
@@ -35,13 +31,6 @@ def hello():
         ]
     })
 
-@app.route('/api/return_user')
-def return_user():
-    mycursor = mydb.connection.cursor()
-    user = dbcon_user.find_username("markRover12", mycursor)
-
-    return jsonify (user)
-
 @app.route('/api/find_user', methods = ['GET', 'POST'])
 def find_user():
     mycursor = mydb.connection.cursor()
@@ -56,25 +45,55 @@ def signup():
     mycursor = mydb.connection.cursor()
     data = request.get_json()
     firstname = data['firstname']
-    middlename = data['middlename']
     lastname = data['lastname']
     username = data['username']
     password = data['password']
     email = data['email']
     id_role = data['id_role']
+    
+    email_error = dbcon_user.validate_email(email)
+    username_error = dbcon_user.validate_username(username, mycursor)
+    password_error = dbcon_user.validate_password(password)
+    status = False
 
-    dbcon_user.addUser((firstname, middlename, lastname), username, password, email, id_role, mycursor)
+    if(username_error):
+        return ({
+            'success': False,
+            'username_error': username_error
+        })
+    
+    if(password_error):
+        return ({
+            'username_error': None,
+            'success': False,
+            'password_error': password_error
+        })
+    
+    if(email_error):
+        return ({
+            'password_error': None,
+            'success': False,
+            'email_error': email_error
+        })
+    
+    status = True
+    if(status == True):
+        dbcon_user.addUser((firstname, lastname), username, password, email, id_role, mycursor)
+
+        return({
+            'email_error': None,
+            'success': True
+        })
 
 
 @app.route('/api/login', methods=['POST', 'GET'])
 def login():
-    mycursor = mysql.connection.cursor()
+    mycursor = mydb.connection.cursor()
     data = request.get_json()
     username = data['username']
     password = data['password']
 
     status = dbcon_user.login_user(username, password, mycursor)
-    print(status)
     if status:
 
         session['user_id'] = dbcon_user.get_userID(username, mycursor)

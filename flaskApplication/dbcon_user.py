@@ -100,6 +100,22 @@ def validate_email(email):
   return None
 
 # ______________________________________________________________________________________________
+# - - - - - - - - - - - VALIDATE USERNAME (signup)
+
+def validate_username(username, mycursor):
+  id_role = get_role(username, mycursor)
+  str_role = determine_role(id_role)
+
+  query = ("SELECT username FROM " + str_role + " WHERE BINARY username=%s")
+  mycursor.execute(query, (username,))  
+  result = mycursor.fetchone()[0]
+  
+  if result:
+    return "Username already Exists!"
+  else:
+    return None
+
+# ______________________________________________________________________________________________
 # - - - - - - - - - - - VALIDATE PASSWORD (signup)
 
 def validate_password(password):
@@ -136,8 +152,8 @@ def addUser(fullname, username, password, email, role, mycursor):
     str_role = str(determine_role(role))
     date = datetime.today().strftime('%Y-%m-%d')
 
-    query = ("INSERT INTO " + str_role + " (firstname, middlename, lastname, username, password, email, joinDate, id_role, activeStatus) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)")
-    val = (fullname[0], fullname[1], fullname[2], username, password, email, date, role, 1)
+    query = ("INSERT INTO " + str_role + " (firstname, lastname, username, password, email, joinDate, id_role, activeStatus) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)")
+    val = (fullname[0], fullname[2], username, password, email, date, role, 1)
 
     mycursor.execute(query, val)
     mycursor.execute("COMMIT")
@@ -236,7 +252,7 @@ def get_userInformation(username, mycursor):
 
     i += 1
 
-  query = ("SELECT firstname, middlename, lastname, username, email FROM " + str_role + " WHERE BINARY username=%s")
+  query = ("SELECT firstname, lastname, username, email FROM " + str_role + " WHERE BINARY username=%s")
   mycursor.execute(query, (username,))
   result = mycursor.fetchone()
 
