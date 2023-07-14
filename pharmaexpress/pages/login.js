@@ -1,9 +1,48 @@
+// foreign libraries
+import React, { useState } from 'react';
+import axios from 'axios';
+
+// local libraries
 import Head from 'next/head'
 import Layout from '../layout/layout'
 import Link from 'next/link'
 import styles from '../styles/Form.module.css'
 
+
 export default function Login(){
+    
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+
+    const handleUsernameChange = (e) => {
+        setUsername(e.target.value);
+        console.log(username)
+    };
+
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value);
+        console.log(password)
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        axios.post('http://localhost:8080/api/login', { username, password })
+        .then(response => {
+            const { success } = response.data;
+            if (success) {
+            window.location.href = '/home';
+            } else {
+            setError(response.data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            setError('An error occurred. Please try again later.');
+        });
+    };
+
     return(
         <Layout>
             <Head>
@@ -19,19 +58,17 @@ export default function Login(){
 
                         <form className='flex flex-col gap-8 items-center'>
                             <div className={styles.input_group}>
-                                <input className={styles.input_text} type='email' name='email' placeholder='Email'></input>
+                                <input className={styles.input_text} type="text" value={username} placeholder='Username' onChange={handleUsernameChange} />
                             </div>
 
                             <div className={styles.input_group}>
-                                <input className={styles.input_text} type='password' name='password' placeholder='Password'></input>
+                                <input className={styles.input_text} type="password" value={password} placeholder='Password' onChange={handlePasswordChange} />
                             </div>
-
+                            {error && <p>{error}</p>}
                             <div className={styles.button}>
-                                <Link href='/home'>
-                                    <button type='submit'>
-                                        Log in 
-                                    </button>
-                                </Link>
+                                <button type='submit'>
+                                    Log in 
+                                </button>
                             </div>
 
                             <p className='text-center font-light'> 

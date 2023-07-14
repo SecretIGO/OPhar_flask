@@ -21,21 +21,61 @@ def get_roleCount(mycursor):
 def determine_role(role):
   if role == 1:
     return "user_customer"
-  if role == 2:
+  elif role == 2:
     return "user_pharmacy_staff"
-  if role == 3:
+  elif role == 3:
     return "user_courier"
-  if role == 4:
+  elif role == 4:
     return "user_pharmacy_manager"
-  if role == 5:
+  elif role == 5:
     return "user_admin"
+  else:
+    return None
+
+def get_role(username, mycursor):
+  try:
+
+    i = 1
+    result = None
+    while (result == None):
+      str_role = str(determine_role(i))
+      
+      query = ("SELECT id_role FROM " + str_role + " WHERE BINARY username=%s")
+      mycursor.execute(query, (username,))
+      result = mycursor.fetchone()
+
+      i+=1
+
+    return result[0]
   
-def find_username(username, role, mycursor):
+  except Exception as e:
+    print("Error exception : ", e)
+
+def find_username(username, mycursor):
 
   try:
-    str_role = str(determine_role(role))
-    
+    id_role = get_role(username, mycursor)
+    str_role = str(determine_role(id_role))
+
     query = ("SELECT username FROM " + str_role + " WHERE BINARY username=%s")
+    mycursor.execute(query, (username,))  
+    result = mycursor.fetchone()
+
+    if result:
+      return result
+    else:
+      return None
+
+  except Exception as e:
+    print("Error exception : ", e)
+
+def find_password(username, mycursor):
+
+  try:
+    id_role = get_role(username, mycursor)
+    str_role = str(determine_role(id_role))
+      
+    query = ("SELECT password FROM " + str_role + " WHERE BINARY username=%s")
     mycursor.execute(query, (username,))
     result = mycursor.fetchone()
 
@@ -112,35 +152,45 @@ def addUser(fullname, username, password, email, role, mycursor):
 
 def login_user(username, password, mycursor):
   try:
-    temp = 0
-    while temp <= get_roleCount(mycursor) or input_username == None:
-      str_role = determine_role(temp)
-      input_username = find_username(username, str_role, mycursor)
-      temp += 1
+    status = False
+    result = None
+    
+    i = 1
+    while result == None:
+      result = str(find_username(username, mycursor)[0])
+      print(result)
+      
+      i+=1
 
-    if input_username:
-      query = ("SELECT password FROM users WHERE username=%s")
-      mycursor.execute(query, input_username)      
-      temp_password = mycursor.fetchone()[0]
-
-      if password == temp_password:
+    if result != "None":
+      user_password = find_password(username, mycursor)
+      
+      print(password)
+      print(user_password[0])
+      if password == user_password[0]:
         print("User identified!")
-        query = ("UPDATE users SET activeStatus=1 WHERE username = %s")
-        mycursor.execute(query, (username,))
 
+        id_role = get_role(username, mycursor)
+        str_role = str(determine_role(id_role))
+
+        query = ("UPDATE " + str_role + " SET activeStatus=1 WHERE username = %s")
+        mycursor.execute(query, (username,))
         mycursor.execute("COMMIT")
+        status = True
+        return status
       else:
         print("Incorrect password!")
-        return False
+        print(status)
+        return status
       
     else:
       print("Username not found!")
-      return False
+      return status
 
   except Exception as e:
     print("Error Exception : ", e)
 
-  return True
+  return status
 
 # ______________________________________________________________________________________________
 # - - - - - - - - - - - LOGOUT USER
@@ -154,8 +204,39 @@ def logout_user(username, mycursor):
 # ______________________________________________________________________________________________
 # - - - - - - - - - - - GETTING USER INFORMATION
 
+def get_userID(username, mycursor):
+  i = 1
+  result = None
+  str_role = None
+  while (result == None or i > get_roleCount(mycursor)):
+    str_role = str(determine_role(i))
+    
+    query = ("SELECT username FROM " + str_role + " WHERE BINARY username=%s")
+    mycursor.execute(query, (username,))
+    result = mycursor.fetchone()
+
+    i += 1
+  
+  query = ("SELECT id FROM " + str_role + " WHERE BINARY username=%s")
+  mycursor.execute(query, (username,))
+  result = mycursor.fetchone()[0]
+
+  return result
+
 def get_userInformation(username, mycursor):
-  query = ("SELECT firstname, middlename, lastname, username, email FROM users WHERE BINARY username=%s")
+  i = 1
+  result = None
+  str_role = None
+  while (result == None or i > get_roleCount(mycursor)):
+    str_role = str(determine_role(i))
+    
+    query = ("SELECT username FROM " + str_role + " WHERE BINARY username=%s")
+    mycursor.execute(query, (username,))
+    result = mycursor.fetchone()
+
+    i += 1
+
+  query = ("SELECT firstname, middlename, lastname, username, email FROM " + str_role + " WHERE BINARY username=%s")
   mycursor.execute(query, (username,))
   result = mycursor.fetchone()
 
