@@ -151,7 +151,9 @@ def validate_password(password):
 def addUser(fullname, username, password, email, role, mycursor):
   try:
     id_role = int(role)
+
     str_role = determine_role(id_role)
+
 
     print(fullname, username, password, email, role)
     print(str_role)
