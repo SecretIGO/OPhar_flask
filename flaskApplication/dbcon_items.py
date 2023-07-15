@@ -44,6 +44,38 @@ def removeItem(id, mycursor):
     except Exception as e:
         print("Exception error : ", e)
 
+def find_allItems(mycursor):
+    try:
+        query = ("SELECT * FROM items")
+
+        mycursor.execute(query)
+        db_items = mycursor.fetchall()
+
+        data = []
+        items = []
+        i = 0
+        for item in db_items:
+            str_category = determine_category(item[3])
+
+            data = {
+                'id' : item[0],
+                'drug_name' : item[1],
+                'price' : item[2],
+                'category' : str_category,
+                'remaining_stock' : item[5],
+                'description' : item[6],
+                'item_dateListed' : item[7],
+                'rating' : item[8],
+            }
+            items.insert(i, data)
+
+            i+=1
+
+        return items
+
+    except Exception as e:
+        print("Exception error : ", e)
+
 def find_storeItems(id_store, mycursor):
     try:
         query = ("SELECT * FROM items WHERE id_store = %s")

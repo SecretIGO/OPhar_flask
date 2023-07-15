@@ -13,7 +13,9 @@ mydb = pymysql.connect(
 
 mycursor = mydb.cursor()
 
-dbcon_user.login_user("Jokowan","Jokowan23",mycursor)
+print(dbcon_items.find_allItems(mycursor))
+
+# dbcon_user.login_user("Jokowan","Jokowan23",mycursor)
 
 # print(dbcon_user.get_userID("Jokowan", mycursor))
 

@@ -4,6 +4,7 @@ from flask_cors import CORS
 from datetime import date
 
 import dbcon_user
+import dbcon_items
 
 app = Flask(__name__)
 app.secret_key = 'baconandeggs'
@@ -30,6 +31,10 @@ def hello():
             "members3"
         ]
     })
+
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# U S E R S
 
 @app.route('/api/find_user', methods = ['GET', 'POST'])
 def find_user():
@@ -85,7 +90,6 @@ def signup():
             'success': True
         })
 
-
 @app.route('/api/login', methods=['POST', 'GET'])
 def login():
     mycursor = mydb.connection.cursor()
@@ -118,6 +122,18 @@ def submit_getuserinfo():
     mycursor = mydb.connection.cursor()
 
     result = dbcon_user.get_userInformation(username, mycursor)
+
+    return jsonify(result)
+
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# I T E M S
+
+@app.route('/api/get_items')
+def get_allItems():
+    mycursor = mydb.connection.cursor()
+
+    result = dbcon_items.find_allItems(mycursor)
 
     return jsonify(result)
 
