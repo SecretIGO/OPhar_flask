@@ -48,6 +48,11 @@ export default function Register(){
         console.log(password)
     };
 
+    const handleRoleChange = (e) => {
+        setRole(e.target.value);
+        console.log(id_role)
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -106,9 +111,10 @@ export default function Register(){
 
                         <div className='flex w-full'>
                             <h1 className='text-white pr-2 font-bold'>Select user type:</h1>
-                            <select className='rounded-xl p-1 focus:outline-none text-sm' value={id_role} onChange={setRole}>
-                                <option value='1'>Customer</option>
-                                <option value='2'>Pharmacy Staff</option>
+                            <select className='rounded-xl p-1 focus:outline-none text-sm' defaultValue='0' onChange={handleRoleChange}>
+                                <option value='0'> - select role - </option>
+                                <option value='1' onChange={handleRoleChange}>Customer</option>
+                                <option value='2' onChange={handleRoleChange}>Pharmacy Staff</option>
                             </select>
 
                         </div>
