@@ -3,6 +3,7 @@ import pymysql
 import dbcon_items
 import dbcon_store
 import dbcon_user
+import dbcon_cart_items
 
 mydb = pymysql.connect(
   host="127.0.0.1",
@@ -13,7 +14,9 @@ mydb = pymysql.connect(
 
 mycursor = mydb.cursor()
 
-print(dbcon_items.find_allItems(mycursor))
+# print(dbcon_items.find_allItems(mycursor))
+
+print(dbcon_cart_items.get_userCartItems(1, mycursor))
 
 # dbcon_user.login_user("Jokowan","Jokowan23",mycursor)
 

@@ -59,7 +59,7 @@ def find_allItems(mycursor):
 
             data = {
                 'id' : item[0],
-                'drug_name' : item[1],
+                'name' : item[1],
                 'price' : item[2],
                 'category' : str_category,
                 'remaining_stock' : item[5],
