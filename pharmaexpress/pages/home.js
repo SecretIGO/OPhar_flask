@@ -14,6 +14,7 @@ export default function Home({featuredProduct, newProducts}){
 }
 
 export async function getStaticProps() {
+    user id = 1
 
     const featuredProductId = 'your-featured-product-id';
     const featuredProduct = Data.find((product) => product.id === featuredProductId);
