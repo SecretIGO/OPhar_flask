@@ -1,5 +1,6 @@
 import styles from '@/styles/Cart.module.css'
 import QuantityBtn from './quantitybutton'
+import { useState } from 'react'
 
 /*
     <div className='h-screen bg-blue-300 rounded-2xl'>
@@ -7,6 +8,21 @@ import QuantityBtn from './quantitybutton'
 */
 
 export default function CartContent(){
+
+    const [count, setCount] = useState(1)
+
+    const addQuantity = () =>{
+        setCount(count => count + 1)
+    }
+
+    const minusQuantity = () =>{
+        setCount(count => count - 1)
+    }
+    
+
+    const samplePrice = 299;
+    const totalPrice = samplePrice * count;
+
     return(
 
         <div className='px-10'>
@@ -34,13 +50,17 @@ export default function CartContent(){
                     </div>
 
                     <div className='price'>
-                        200php
+                        {samplePrice}
                     </div>
 
                     <div>
-                        <QuantityBtn></QuantityBtn>
+                        <QuantityBtn 
+                            itemCount={count}
+                            onDecrement={minusQuantity}
+                            onIncrement={addQuantity}             
+                        />
                     </div>
-                    <div className={styles.totalPrice}>200php</div>
+                    <div className={styles.totalPrice}>{totalPrice}</div>
                 </div>
             </div>
             
@@ -49,10 +69,12 @@ export default function CartContent(){
                 <div className='cart-checkout'>
                     <div className='flex justify-between text-xl mb-6'>
                         <span>Subtotal</span>
-                        <span className='font-bold'>200php</span>
+                        <span className='font-bold'>{totalPrice}</span>
                     </div>
-                    <button className={styles.buttonStyle}>Mark as Emergency</button>   
-                    <button className={styles.buttonStyle}>Check out</button>
+                    <button className={styles.buttonStyle}>Mark as Emergency</button>
+                    <form action='/create-checkout' method='POST'>
+                        <button type='submit' className={styles.buttonStyle}>Check out</button>
+                    </form>   
                 </div>
             </div>
         </div>

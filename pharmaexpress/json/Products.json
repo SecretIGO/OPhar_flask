@@ -1,57 +1,71 @@
 [{
     "id": 1,
+    "_id": "9d1e5e70-1e62-11ee-be56-0242ac120002",
     "drug_brand": "Triple Antibiotic",
     "drug_name": "bacitracin zinc, neomycin sulfate, polymyxin b sulfate",
     "manufacturer": "Safetec of America, Inc.",
     "price": "$6.50",
+    "stock": "150",
     "dosage_form": "capsule",
     "image": "/assets/pills1.png"
   }, {
     "id": 2,
+    "_id":"b8fdf5b0-1e62-11ee-be56-0242ac120002",
     "drug_brand": "Ampicillin",
     "drug_name": "Ampicillin Sodium",
     "manufacturer": "General Injectables & Vaccines, Inc",
     "price": "$3.69",
+    "stock": "200",
     "dosage_form": "capsule",
     "image": "/assets/pills2.png"
   },{
     "id": 3,
+    "_id":"c121ccbc-1e62-11ee-be56-0242ac120002",
     "drug_brand": "Ampicillin",
     "drug_name": "Ampicillin Sodium",
     "manufacturer": "General Injectables & Vaccines, Inc",
     "price": "$3.69",
+    "stock": "150",
     "dosage_form": "capsule",
     "image": "/assets/pills2.png"
   },{
     "id": 4,
+    "_id":"caab4880-1e62-11ee-be56-0242ac120002",
     "drug_brand": "GIVEN BY NATURE RICE MASK SHEET",
     "drug_name": "GLYCERIN",
     "manufacturer": "NATURE REPUBLIC CO., LTD.",
     "price": "$0.90",
+    "stock": "180",
     "dosage_form": "capsule",
     "image": "/assets/mask.png"
   }, {
     "id": 5,
+    "_id": "d4392b42-1e62-11ee-be56-0242ac120002",
     "drug_brand": "DIGOX",
     "drug_name": "Digoxin",
     "manufacturer": "Unit Dose Services",
     "price": "$4.34",
+    "stock": "500",
     "dosage_form": "tablet",
     "image": "/assets/tablet1.png"
   }, {
     "id": 6,
+    "_id": "dc4fbb84-1e62-11ee-be56-0242ac120002",
     "drug_brand": "Asthma HP",
     "drug_name": "Arsenicum Album, Belladonna, Blatta Orientalis, Ipecacuanha, Kali Carbonicum, Lobelia Inflata, Natrum Sulphuricum, Silicea",
     "manufacturer": "Energique, Inc.",
     "price": "$4.94",
+    "stock": "350",
     "dosage_form": "capsule",
     "image": "/assets/pills3.png"
   }, {
     "id": 7,
+    "_id":"e85accde-1e62-11ee-be56-0242ac120002",
     "drug_brand": "AVAPRO",
     "drug_name": "IRBESARTAN",
     "manufacturer": "Bristol-Myers Squibb Company",
     "price": "$5.13",
+    "stock": "999",
     "dosage_form": "tablet",
     "image": "/assets/tablet2.png"
   }]
