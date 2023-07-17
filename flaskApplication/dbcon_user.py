@@ -154,7 +154,6 @@ def addUser(fullname, username, password, email, role, mycursor):
 
     str_role = determine_role(id_role)
 
-
     print(fullname, username, password, email, role)
     print(str_role)
     date = datetime.today().strftime('%Y-%m-%d')
@@ -243,7 +242,7 @@ def get_userInformation(username, mycursor):
   result = mycursor.fetchone()
 
   if result:
-    details = s_fname, s_mname, s_lname, s_username, email = result
+    details = s_fname, s_lname, s_username, email = result
 
   return details
 

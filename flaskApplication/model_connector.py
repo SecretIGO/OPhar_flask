@@ -16,7 +16,7 @@ mycursor = mydb.cursor()
 
 # print(dbcon_items.find_allItems(mycursor))
 
-print(dbcon_cart_items.get_userCartItems(1, mycursor))
+# print(dbcon_cart_items.get_userCartItems(1, mycursor))
 
 # dbcon_user.login_user("Jokowan","Jokowan23",mycursor)
 
@@ -25,8 +25,9 @@ print(dbcon_cart_items.get_userCartItems(1, mycursor))
 # result = dbcon_user.find_username("", mycursor)
 
 # print(result)
-# print(dbcon_user.get_userInformation("johndoe", mycursor))
+# print(dbcon_user.get_userInformation("Marsch28", mycursor))
 
+print(dbcon_items.get_itemDetails(41, mycursor))
 # dbcon_items.addItem("Aspirin", "120", "1", "1", "50", "Aspirin is a nonsteroidal anti-inflammatory drug", "1", mycursor)
   # working
 

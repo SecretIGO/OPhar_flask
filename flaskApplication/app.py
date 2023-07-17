@@ -12,15 +12,18 @@ CORS(app)
 
 app.config[ 'MYSQL_HOST' ] = "localhost"
 app.config[ 'MYSQL_USER' ] = "root"
-app.config[ 'MYSQL_PASSWORD' ] = ""
+app.config[ 'MYSQL_PASSWORD' ] = "root"
 app.config[ 'MYSQL_DB' ] = "db_onphar"
 
 mydb =  MySQL(app)
 
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# T E S T
+
 @app.route('/')
 def index():
-    return "Heehee"
-
+    return "heehee"
 
 @app.route('/api/test')
 def hello():
@@ -129,11 +132,53 @@ def submit_getuserinfo():
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # I T E M S
 
+@app.route('/api/')
+def addItem():
+    mycursor = mydb.connection.cursor()
+    data = request.get_json()
+    name = data['name']
+    price = data['price']
+    id_category = data['id_category']
+    id_symptom = data['id_symptom']
+    remaining_stock = data['remaining_stock']
+    description = data['description']
+    id_store = data['id_store']
+    status = data['status']
+
+    try:
+        if status:
+            dbcon_items.addItem(name, price, id_category, id_symptom, remaining_stock, description, id_store, mycursor)
+
+            return jsonify({'success' : True})
+        else:
+            return jsonify({'success' : False})
+
+    except Exception as e:
+        print("Error exception : ", e)
+
+@app.route('/api/remove_item')
+def removeItem():
+    mycursor = mydb.connection.cursor()
+    data = request.get_json()
+    id_item = data['id_item']
+
+    dbcon_items.removeItem(id_item, mycursor)
+
 @app.route('/api/get_items')
 def get_allItems():
     mycursor = mydb.connection.cursor()
 
     result = dbcon_items.find_allItems(mycursor)
+
+    return jsonify(result)
+
+@app.route('/api/get_itemDetails')
+def get_itemDetails():
+    mycursor = mydb.connection.cursor()
+    data = request.get_json()
+    id_item = data['id_item']
+
+    result = dbcon_items.get_itemDetails(id_item, mycursor)
 
     return jsonify(result)
 

@@ -107,3 +107,18 @@ def find_storeItems(id_store, mycursor):
 
     except Exception as e:
         print("Exception error : ", e)
+
+def get_itemDetails(id_item, mycursor):
+    try:
+        query = ("SELECT * FROM items WHERE id = %s")
+        
+        mycursor.execute(query, id_item)
+        result = mycursor.fetchone()
+
+        if result :
+            details = s_id, s_name, s_price, s_id_category, s_id_symptom, s_remaining_stock, s_description, s_item_dateListed, s_rating, s_ActiveStatus, s_quantity_sold, s_id_store = result
+        
+        return details
+
+    except Exception as e:
+        print("Error exception : ", e)
