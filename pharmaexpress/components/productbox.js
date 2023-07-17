@@ -3,16 +3,16 @@ import styles from '../styles/ProductBox.module.css'
 import Image from 'next/image';
 
 
-export default function ProductBox({drug_brand,image,price}){
+export default function ProductBox({name,image,price}){
     return(
         <div>
             <div className={styles.white_box}>
-                    <img className={styles.imgStyle} src={image}/>
+                    <img className={styles.imgStyle}/>
             </div>
             <div className={styles.product_info}>
                 <Link href=''>
                     <h1 className='text-lg font-bold p-2'>
-                        {drug_brand}
+                        {name}
                     </h1>
                 </Link>
                 <div className={styles.price_row}>
