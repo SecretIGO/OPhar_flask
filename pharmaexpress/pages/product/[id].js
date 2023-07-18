@@ -3,6 +3,8 @@ import QuantityBtn from "@/components/quantitybutton";
 import AddBtn from "@/components/AddCartBtn";
 import styles from '@/styles/SingleProduct.module.css';
 import Image from "next/image";
+
+// imp
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import axios from "axios";

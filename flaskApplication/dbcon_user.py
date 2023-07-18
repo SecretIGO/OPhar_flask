@@ -233,6 +233,11 @@ def get_userID(username, mycursor):
 
   return result
 
+def get_userSessionUser(id_user, username, mycursor):
+  query = ("SELECT id_role FROM ")
+
+  query = ("SELECT id, username, role FROM ")
+
 def get_userInformation(username, mycursor):
   id_role = get_role(username, mycursor)
   str_role = determine_role(id_role)

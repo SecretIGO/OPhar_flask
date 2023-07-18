@@ -132,16 +132,29 @@ def login():
     status = dbcon_user.login_user(username, password, mycursor)
     if status:
         id_user = dbcon_user.get_userID(username, mycursor)
-        session.login_user(id_user, username, mycursor)
+        session.login_user(username, mycursor)
 
         return jsonify({'success': True, 'id_user': id_user})
     else:
         return jsonify({'success': False, 'error': 'Invalid credentials'})
+    
+@app.route('/api/logout', methods=['POST', 'GET'])
+def logout():
+    mycursor = mydb.connection.cursor()
+    data = request.get_json()
+    username = data['username']
+    id_role = dbcon_user.get_role(username, mycursor)
+    str_role = dbcon_user.determine_role(id_role)
+
+    session.logout_user(str_role, mycursor)
 
 @app.route('/api/check_loginStatus')
 def check_loginStatus():
-  is_logged_in = 'user_id' in session
-  return jsonify({'isLoggedIn': is_logged_in})
+    mycursor = mydb.connection.cursor()
+
+    result = session.get_sessionCustomer(mycursor)
+
+    return result
 
 @app.route('/api/get_userinfo', methods = ['GET', 'POST'])
 def get_userinfo():
