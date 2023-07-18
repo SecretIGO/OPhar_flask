@@ -2,11 +2,6 @@ import styles from '@/styles/Cart.module.css'
 import QuantityBtn from './quantitybutton'
 import { useState } from 'react'
 
-/*
-    <div className='h-screen bg-blue-300 rounded-2xl'>
-    </div>
-*/
-
 export default function CartContent(){
 
     const [count, setCount] = useState(1)
@@ -22,7 +17,7 @@ export default function CartContent(){
 
     const samplePrice = 299;
     const totalPrice = samplePrice * count;
-
+    
     return(
 
         <div className='px-10'>

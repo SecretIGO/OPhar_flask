@@ -14,6 +14,10 @@ mydb = pymysql.connect(
 
 mycursor = mydb.cursor()
 
+# print(dbcon_items.get_itemDetails(41, mycursor))
+
+dbcon_cart_items.addItem_toCart(42, 2, 10, mycursor)
+
 # print(dbcon_items.find_allItems(mycursor))
 
 # print(dbcon_cart_items.get_userCartItems(1, mycursor))
@@ -27,7 +31,7 @@ mycursor = mydb.cursor()
 # print(result)
 # print(dbcon_user.get_userInformation("Marsch28", mycursor))
 
-print(dbcon_items.get_itemDetails(41, mycursor))
+# print(dbcon_items.get_itemDetails(41, mycursor))
 # dbcon_items.addItem("Aspirin", "120", "1", "1", "50", "Aspirin is a nonsteroidal anti-inflammatory drug", "1", mycursor)
   # working
 

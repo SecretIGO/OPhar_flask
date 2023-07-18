@@ -66,6 +66,7 @@ def find_allItems(mycursor):
                 'description' : item[6],
                 'item_dateListed' : item[7],
                 'rating' : item[8],
+                'image' : item[11]
             }
             items.insert(i, data)
 
@@ -98,6 +99,7 @@ def find_storeItems(id_store, mycursor):
                 'description' : item[6],
                 'item_dateListed' : item[7],
                 'rating' : item[8],
+                'image' : item[11]
             }
             items.insert(i, data)
 
@@ -112,11 +114,24 @@ def get_itemDetails(id_item, mycursor):
     try:
         query = ("SELECT * FROM items WHERE id = %s")
         
-        mycursor.execute(query, id_item)
-        result = mycursor.fetchone()
+        mycursor.execute(query, (id_item,))
+        item = mycursor.fetchone()
+        print(item)
 
-        if result :
-            details = s_id, s_name, s_price, s_id_category, s_id_symptom, s_remaining_stock, s_description, s_item_dateListed, s_rating, s_ActiveStatus, s_quantity_sold, s_id_store = result
+        if item :
+            str_category = determine_category(item[3])
+            
+            details = {
+                'id' : item[0],
+                'name' : item[1],
+                'price' : item[2],
+                'category' : str_category,
+                'remaining_stock' : item[5],
+                'description' : item[6],
+                'item_dateListed' : item[7],
+                'rating' : item[8],
+                'image' : item[11]
+            }
         
         return details
 

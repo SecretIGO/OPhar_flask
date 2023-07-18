@@ -19,7 +19,7 @@ function Store() {
       console.error('Error:', error);
     }
   };
-
+  
   return (
     <div>
       <Header />

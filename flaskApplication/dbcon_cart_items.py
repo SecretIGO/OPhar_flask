@@ -1,9 +1,13 @@
 import dbcon_items
 
-def addItem_toCart(id_item, quantity, mycursor):
+def addItem_toCart(id_item, id_user, quantity, mycursor):
     try:
-        query = ("INSERT INTO item_cart (id_item, quantity) VALUES (%s,%s,%s)")
-        val = (id_item, quantity)
+        query = ("SELECT id FROM cart WHERE id_user = %s")
+        mycursor.execute(query, (id_user,))
+        id_cart = mycursor.fetchone()[0]
+
+        query = ("INSERT INTO cart_items (id_item, id_cart, quantity) VALUES (%s,%s,%s)")
+        val = (id_item, id_cart, quantity)
 
         mycursor.execute(query, val)
         mycursor.execute("COMMIT")

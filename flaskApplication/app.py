@@ -1,10 +1,14 @@
-from flask import Flask, render_template, session, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_mysqldb import MySQL
 from flask_cors import CORS
 from datetime import date
+import json
+import os
 
 import dbcon_user
 import dbcon_items
+import dbcon_cart_items
+import session
 
 app = Flask(__name__)
 app.secret_key = 'baconandeggs'
@@ -35,9 +39,34 @@ def hello():
         ]
     })
 
+@app.route('/api/update_json', methods=['POST'])
+def update_json():
+    data = request.get_json()
+    file_path = '../pharmaexpress/file.json'
+
+    with open(file_path, 'r') as file:
+        existing_data = json.load(file)
+
+    existing_data.update(data)
+
+    with open(file_path, 'w') as file:
+        json.dump(existing_data, file)
+
+    return jsonify(message='JSON file updated successfully')
+
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # U S E R S
+
+@app.route('/api/get_user', methods =['GET', 'POST'])
+def get_userID():
+    mycursor = mydb.connection.cursor()
+    data = request.get_json()
+    username = data['username']
+    userID = dbcon_user.get_userID(username, mycursor)
+
+    result = dbcon_user.get_userInformation(username, mycursor)
+    return jsonify(result)
 
 @app.route('/api/find_user', methods = ['GET', 'POST'])
 def find_user():
@@ -102,12 +131,17 @@ def login():
 
     status = dbcon_user.login_user(username, password, mycursor)
     if status:
+        id_user = dbcon_user.get_userID(username, mycursor)
+        session.login_user(id_user, username, mycursor)
 
-        session['user_id'] = dbcon_user.get_userID(username, mycursor)
-
-        return jsonify({'success': True})
+        return jsonify({'success': True, 'id_user': id_user})
     else:
         return jsonify({'success': False, 'error': 'Invalid credentials'})
+
+@app.route('/api/check_loginStatus')
+def check_loginStatus():
+  is_logged_in = 'user_id' in session
+  return jsonify({'isLoggedIn': is_logged_in})
 
 @app.route('/api/get_userinfo', methods = ['GET', 'POST'])
 def get_userinfo():
@@ -132,7 +166,7 @@ def submit_getuserinfo():
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # I T E M S
 
-@app.route('/api/')
+@app.route('/api/add_item')
 def addItem():
     mycursor = mydb.connection.cursor()
     data = request.get_json()
@@ -172,15 +206,33 @@ def get_allItems():
 
     return jsonify(result)
 
-@app.route('/api/get_itemDetails')
+@app.route('/api/get_itemDetails', methods = ['POST', 'GET'])
 def get_itemDetails():
     mycursor = mydb.connection.cursor()
     data = request.get_json()
-    id_item = data['id_item']
-
+    id_item = int(data['id_item'])
+    print(id_item)
     result = dbcon_items.get_itemDetails(id_item, mycursor)
-
     return jsonify(result)
+
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# C A R T   I T E M S
+
+@app.route('/api/add_item_toCart', methods=['GET', 'POST'])
+def add_item_toCart():
+    mycursor = mydb.connection.cursor()
+    data = request.get_json()
+    id_user = session.get('id_user')
+    id_item = data['id_item']
+    quantity = data['quantity']
+    print(id_user, id_item, quantity)
+
+    if id_user and id_item and quantity:
+        dbcon_cart_items.addItem_toCart(id_item, id_user, quantity, mycursor)
+        return jsonify({'success' : True})
+    else:
+        return jsonify({'success' : False})
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)

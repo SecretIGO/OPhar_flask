@@ -17,27 +17,27 @@ export default function Login(){
 
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
-        console.log(username)
     };
 
     const handlePasswordChange = (e) => {
         setPassword(e.target.value);
-        console.log(password)
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        axios.post('http://localhost:8080/api/login', { username, password })
-        .then(response => {
-            const { success } = response.data;
+        axios
+        .post('http://localhost:8080/api/login', { username, password })
+        .then((response) => {
+            const { success, id_user } = response.data;
             if (success) {
-                window.location.href = '/home';
+            localStorage.setItem('id_user', id_user);
+            window.location.href = '/home';
             } else {
-                setError(response.data.error);
+            setError(response.data.error);
             }
         })
-        .catch(error => {
+        .catch((error) => {
             console.error('Error:', error);
             setError('An error occurred. Please try again later.');
         });

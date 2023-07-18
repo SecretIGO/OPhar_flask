@@ -19,7 +19,7 @@ function LoginForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.post('http://localhost:8080/api/login', { username, password })
+    axios.post('http://localhost:8080/api/signin', { username, password })
       .then(response => {
         const { success } = response.data;
         if (success) {
