@@ -14,7 +14,7 @@ export default function Navbar() {
     const username = cookies.get('username');
     setUser(username);
   };
-
+  
   const handleLogout = () => {
     const cookies = new Cookies();
     cookies.remove('username');

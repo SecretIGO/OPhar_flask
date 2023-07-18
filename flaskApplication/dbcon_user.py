@@ -226,7 +226,7 @@ def logout_user(username, id_role, mycursor):
 def get_userID(username, mycursor):
   id_role = get_role(username, mycursor)
   str_role = determine_role(id_role)
-  
+  print(username)
   query = ("SELECT id FROM " + str_role + " WHERE BINARY username=%s")
   mycursor.execute(query, (username,))
   result = mycursor.fetchone()[0]

@@ -148,6 +148,11 @@ def logout():
 
     session.logout_user(str_role, mycursor)
 
+    if session.get_sessionCustomer(mycursor):
+        return jsonify({'success': True})
+    else:
+        return jsonify({'success': False})
+
 @app.route('/api/check_loginStatus')
 def check_loginStatus():
     mycursor = mydb.connection.cursor()
@@ -236,7 +241,8 @@ def get_itemDetails():
 def add_item_toCart():
     mycursor = mydb.connection.cursor()
     data = request.get_json()
-    id_user = session.get('id_user')
+    username = data['username']
+    id_user = dbcon_user.get_userID(username, mycursor)
     id_item = data['id_item']
     quantity = data['quantity']
     print(id_user, id_item, quantity)
@@ -246,6 +252,19 @@ def add_item_toCart():
         return jsonify({'success' : True})
     else:
         return jsonify({'success' : False})
+
+@app.route('/api/get_cartItems', methods=['GET', 'POST'])
+def get_cartItems():
+    mycursor = mydb.connection.cursor()
+    
+    if request.method == 'POST':
+        data = request.get_json()
+        username = data['username']
+        id_user = dbcon_user.get_userID(username, mycursor)
+        result = dbcon_cart_items.get_userCartItems(id_user, mycursor)
+        return jsonify(result)
+    
+    return 'Invalid request'
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)

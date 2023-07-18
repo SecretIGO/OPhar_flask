@@ -3,8 +3,8 @@ import QuantityBtn from "@/components/quantitybutton";
 import AddBtn from "@/components/AddCartBtn";
 import styles from '@/styles/SingleProduct.module.css';
 import Image from "next/image";
+import Cookies from 'universal-cookie';
 
-// imp
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import axios from "axios";
@@ -15,6 +15,17 @@ export default function ProductPage() {
     const [count, setCount] = useState(1);
     const [item, setItem] = useState(null);
     const [error, setError] = useState(null);
+    const [username, setUsername] = useState('')
+
+    useEffect(() => {
+        fetchUser();
+    }, []);
+
+    const fetchUser = () => {
+        const cookies = new Cookies();
+        const username = cookies.get('username');
+        setUsername(username);
+    };
 
     // data connection to database
     useEffect(() => {
@@ -45,11 +56,11 @@ export default function ProductPage() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        axios.post('http://localhost:8080/api/add_item_toCart', { id_item: id, quantity: count })
+        axios.post('http://localhost:8080/api/add_item_toCart', { id_item: id, username, quantity: count })
         .then(response => {
             const { success } = response.data;
             if (success) {
-                router.push('/home');
+                router.push('/store');
             } else {
                 setError(response.data.error);
             }
