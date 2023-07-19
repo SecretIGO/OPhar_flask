@@ -21,7 +21,6 @@ export async function getStaticProps() {
     const featuredProduct = Data.find((product) => product.id === featuredProductId);
 
     const newProducts = Data.slice(0, 10);
-    
   
     return {
       props: {

@@ -1,11 +1,14 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, session, request, redirect, url_for, jsonify
 from flask_mysqldb import MySQL
-from datetime import date
 from flask_cors import CORS
+from datetime import date
 
 import dbcon_user
 
 app = Flask(__name__)
+app.secret_key = 'baconandeggs'
+
+mysql = MySQL()
 CORS(app)
 
 app.config[ 'MYSQL_HOST' ] = "localhost"
@@ -16,77 +19,87 @@ app.config[ 'MYSQL_DB' ] = "db_onphar"
 # hello
 mydb =  MySQL(app)
 
-@app.route('/api/home', methods=['GET'])
-def return_home():
+@app.route('/')
+def index():
+    return "Heehee"
+
+
+@app.route('/api/test')
+def hello():
     return jsonify({
-        'message' : " SANA GUMANA KA "
+        "members" : [
+            "members1",
+            "members2",
+            "members3"
+        ]
     })
 
-@app.route('/register_user', methods = ['POST'])
-def register_user():
-    if request.method == "POST" and 'fname' in request.form and 'mname' in request.form and 'lname' in request.form and 'username' in request.form and 'email' in request.form and 'password' in request.form and 'role' in request.form:
-        fname = request.form['fname']
-        mname = request.form['mname']
-        lname = request.form['lname']
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
-        role = request.form['role']
-        mycursor = mydb.connection.cursor()
+@app.route('/api/return_user')
+def return_user():
+    mycursor = mydb.connection.cursor()
+    user = dbcon_user.find_username("markRover12", mycursor)
 
-        username_warning = dbcon_user.find_username(username, role, mycursor)
-        if username_warning:
-            return render_template('signup.html', 
-                                   username_warning = "Username Already Exists!",
-                                   fname = fname,
-                                   mname = mname,
-                                   lname = lname,
-                                   username = username,
-                                   email = email,
-                                   password = password,
-                                   role = role)
-        
-        email_warning = dbcon_user.validate_email(email)
-        if email_warning:
-            return render_template('signup.html', 
-                                   email_warning = email_warning, 
-                                   fname = fname,
-                                   mname = mname,
-                                   lname = lname,
-                                   username = username,
-                                   email = email,
-                                   password = password,
-                                   role = role)
+    return jsonify (user)
 
-        password_warning = dbcon_user.validate_password(password)
-        if password_warning:
-            return render_template('signup.html', 
-                                   password_warning = password_warning,
-                                   fname = fname,
-                                   mname = mname,
-                                   lname = lname,
-                                   username = username,
-                                   email = email,
-                                   password = password,
-                                   role = role) 
-        
-        dbcon_user.addUser((fname, mname, lname), username, password, email, role, mycursor)
-
-        return render_template('signin.html')
-    
-@app.route('/find_user', methods = ['GET', 'POST'])
+@app.route('/api/find_user', methods = ['GET', 'POST'])
 def find_user():
-    if request.method == "POST":
-        username = request.form['username']
-        role = request.form['role']
-        mycursor = mydb.connection.cursor()
-        result = dbcon_user.find_username(username, role, mycursor)
+    mycursor = mydb.connection.cursor()
+    data = request.get_json()
+    username = data['username']
+    result = dbcon_user.find_username(username, mycursor)
 
-@app.route('/login_user', methods = ['GET','POST'])
-def login_user():
-    if request.method == "POST":
-        username = request.form['username']
-        password = request.form['password']
+    return jsonify(result)
+
+@app.route('/api/signup', methods = ['GET', 'POST'])
+def signup():
+    mycursor = mydb.connection.cursor()
+    data = request.get_json()
+    firstname = data['firstname']
+    middlename = data['middlename']
+    lastname = data['lastname']
+    username = data['username']
+    password = data['password']
+    email = data['email']
+    id_role = data['id_role']
+
+    dbcon_user.addUser((firstname, middlename, lastname), username, password, email, id_role, mycursor)
+
+
+@app.route('/api/login', methods=['POST', 'GET'])
+def login():
+    mycursor = mysql.connection.cursor()
+    data = request.get_json()
+    username = data['username']
+    password = data['password']
+
+    status = dbcon_user.login_user(username, password, mycursor)
+    print(status)
+    if status:
+
+        session['user_id'] = dbcon_user.get_userID(username, mycursor)
+
+        return jsonify({'success': True})
+    else:
+        return jsonify({'success': False, 'error': 'Invalid credentials'})
+
+@app.route('/api/get_userinfo', methods = ['GET', 'POST'])
+def get_userinfo():
+    mycursor = mydb.connection.cursor()
+    data = request.get_json()
+    username = data['username']
+    result = dbcon_user.get_userInformation(username, mycursor)
+
+    return jsonify(result)
+
+@app.route('/api/submit_username', methods=['GET','POST'])
+def submit_getuserinfo():
+    data = request.get_json(force=True)
+    username = data['username']
+    mycursor = mydb.connection.cursor()
+
+    result = dbcon_user.get_userInformation(username, mycursor)
+
+    return jsonify(result)
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
