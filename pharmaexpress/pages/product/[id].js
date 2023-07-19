@@ -3,8 +3,7 @@ import QuantityBtn from "@/components/quantitybutton"
 import AddBtn from "@/components/AddCartBtn"
 import styles from '@/styles/SingleProduct.module.css'
 import Image from "next/image"
-import Data from "@/json/Products.json"
-import { useState } from 'react'
+import { useState } from "react"
 
 export default function ProductPage({product}){
 
@@ -21,9 +20,9 @@ export default function ProductPage({product}){
     return(
         <div>
             <Header/>
-            <div className=' flex justify-center'>
+            <div className='h-screen flex justify-center'>
                 <div className={styles.gridLayout}>
-                    <div className='flex justify-center'>
+                    <div className='grid justify-center'>
                         <div className="bg-blue-300 p-10 border rounded-full shadow-xl">
                             <Image 
                             src='/assets/mask.png'
@@ -50,7 +49,9 @@ export default function ProductPage({product}){
                                         onIncrement={addQuantity}             
                                     />
                                     <div className = "w-1/5">
-                                        <AddBtn/>
+                                        <button>
+                                            Add to cart
+                                        </button>
                                     </div>             
                                 </div>
                             </div>
@@ -67,7 +68,3 @@ export default function ProductPage({product}){
     )
 }
 
-
-function findById(id){
-    return Data.find(product => product.id === id)
-}

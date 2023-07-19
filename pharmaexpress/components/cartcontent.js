@@ -7,7 +7,7 @@ import { useState } from 'react'
     </div>
 */
 
-export default function CartContent(){
+export default function CartContent({products}){
 
     const [count, setCount] = useState(1)
 
@@ -24,10 +24,50 @@ export default function CartContent(){
     const totalPrice = samplePrice * count;
 
     return(
-
         <div className='px-10'>
+            <div>
+                {products.length === 0 && (
+                    <div className='font-bold text-4xl text-center'>
+                        There are no items in the basket
+                    </div>
+                )}
+                {products.map(product => (
+                    <div className='cart-product' key={product.id}>
+
+                        
+                        <div className='img'>
+                            <img src = {product.image}/>
+                        </div>
+
+                        <div className='self-center'>
+                            <h3 className='text-2xl'>Product Name</h3>
+                            <button 
+                                className='text-gray-500 text-base hover:text-black'
+                                onClick={() => onProductRemove(product)}
+                            >
+                                Remove
+                            </button>
+                        </div>
+
+                        <div className='price'>
+                            {samplePrice}
+                        </div>
+
+                        <div>
+                            <QuantityBtn 
+                                itemCount={count}
+                                onDecrement={minusQuantity}
+                                onIncrement={addQuantity}             
+                            /> 
+                        </div>
+
+                        <div className={styles.totalPrice}>{product.price * product.count}PHP</div>
+                    </div>
+                ))}
+            </div>
             <div className="py-12 font-bold text-4xl text-center">
                 <h1>Shopping Cart</h1>
+                
             </div>
 
             <div className={styles.titles}>              
