@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_mysqldb import MySQL
 from flask_cors import CORS
+import paymongo
 from datetime import date
 import json
 import os
@@ -20,6 +21,9 @@ app.config[ 'MYSQL_PASSWORD' ] = "root"
 app.config[ 'MYSQL_DB' ] = "db_onphar"
 
 mydb =  MySQL(app)
+
+paymongo_secret_key = 'pk_test_1vaiknErtpKCpLKnhkaT37gn'
+paymongo.api.key = paymongo_secret_key
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -279,7 +283,21 @@ def get_itemQuantity():
     
     return 'Invalid request'
 
-@app.route('/api/get')
+@app.route('/api/create_checkout_session', methods=['POST'])
+def create_checkout_session():
+    data = request.get_json()
+    subtotal = data['subtotal']
+
+    session = client.checkout_sessions.create(
+        amount=subtotal,
+        payment_intent_data={
+            'description': 'Payment for Cart',
+            'statement_descriptor': 'My Store'
+        },
+
+    )
+
+    return jsonify({'sessionId': session.id})
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
