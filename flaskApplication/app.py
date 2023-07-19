@@ -266,5 +266,20 @@ def get_cartItems():
     
     return 'Invalid request'
 
+@app.route('/api/get_itemQuantity', methods = ['GET', 'POST'])
+def get_itemQuantity():
+    mycursor = mydb.connection.cursor()
+    
+    if request.method == 'POST':
+        data = request.get_json()
+        username = data['username']
+        id_user = dbcon_user.get_userID(username, mycursor)
+        result = dbcon_cart_items.getItem_quantity(id_user, mycursor)
+        return jsonify(result)
+    
+    return 'Invalid request'
+
+@app.route('/api/get')
+
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
