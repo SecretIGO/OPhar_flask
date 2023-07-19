@@ -288,16 +288,78 @@ def create_checkout_session():
     data = request.get_json()
     subtotal = data['subtotal']
 
-    session = client.checkout_sessions.create(
-        amount=subtotal,
-        payment_intent_data={
-            'description': 'Payment for Cart',
-            'statement_descriptor': 'My Store'
+    # Set api key config
+    paymongo.api_key='sk_test_2byzkVErtpKCpLK9hkFT37gn'
+
+    # Payment Method
+    payment_method = paymongo.PaymentMethod.retrieve('pm_...')
+
+    # Retrieve attributes
+    payment_method.id = "pm_..."
+
+    payment_method.type = "card"
+
+    paymongo.PaymentMethod.create({
+    'type': 'card',
+    'details': {
+        'card_number': '5111111111111118',
+        'cvc': '123',
+        'exp_month': 3,
+        'exp_year': 2025,
+    },
+    'billing': {
+        'address': {
+        'line1': 'test line 1',
+        'line2': 'test line 2',
+        'city': 'Antipolo',
+        'state': 'Rizal',
+        'postal_code': '1870',
+        'country': 'PH'
         },
+        'email': 'test@paymongo.com',
+        'name': 'Pay Mongo',
+        'phone': '09123456789'
+    }
+    })
 
-    )
+    # Payment Intent
+    paymongo.PaymentIntent.retrieve('pi_...')
 
-    return jsonify({'sessionId': session.id})
+    payment_intent = paymongo.PaymentIntent.create({
+    'amount': 10000,
+    'currency': 'PHP',
+    'description': 'Dog Treat',
+    'payment_method_allowed': [
+        'card'
+    ],
+    'statement_descriptor': 'BarkerShop'
+    })
+
+    paymongo.PaymentIntent.attach('pi_...', {
+    'payment_method': 'pm_...',
+    'return_url': 'https://test/success'
+    })
+
+    paymongo.PaymentIntent.cancel('pi_...')
+
+    paymongo.PaymentIntent.capture('pi_...', {
+    'amount':10000
+    })
+
+    # Payment
+    paymongo.Payment.retrieve('pay_...')
+
+    # Refund
+    paymongo.Refund.retrieve('ref_...')
+
+    paymongo.Refund.create({
+    'amount': 10000,
+    'payment_id': 'pay_...',
+    'reason': 'requested_by_customer',
+    'metadata': {
+        'merchant': 'test value'
+    }
+    })
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)

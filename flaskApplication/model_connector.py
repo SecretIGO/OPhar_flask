@@ -1,9 +1,12 @@
 import pymysql
+import sys
+import os
 
 import dbcon_items
 import dbcon_store
 import dbcon_user
 import dbcon_cart_items
+from paymongo_local import paymongo_checkoutSystem
 
 mydb = pymysql.connect(
   host="127.0.0.1",
@@ -12,13 +15,16 @@ mydb = pymysql.connect(
   database="db_onphar"
 )
 
+
 mycursor = mydb.cursor()
+
+paymongo_checkoutSystem.paymongo_createSession()
 
 # print(dbcon_items.get_itemDetails(41, mycursor))
 
 # dbcon_cart_items.addItem_toCart(42, 2, 10, mycursor)
 
-print(dbcon_cart_items.getItem_quantity(3, mycursor))
+# print(dbcon_cart_items.getItem_quantity(3, mycursor))
 
 # print(dbcon_items.find_allItems(mycursor))
 
