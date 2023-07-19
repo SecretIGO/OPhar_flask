@@ -3,6 +3,7 @@ import ProductGrid from "@/layout/productgrid";
 import Data from '../json/Products.json'
 
 export default function Store({products}){
+  
     return(
         <div>
             <Header/>
