@@ -16,7 +16,9 @@ mycursor = mydb.cursor()
 
 # print(dbcon_items.get_itemDetails(41, mycursor))
 
-dbcon_cart_items.addItem_toCart(42, 2, 10, mycursor)
+# dbcon_cart_items.addItem_toCart(42, 2, 10, mycursor)
+
+print(dbcon_cart_items.getItem_quantity(3, mycursor))
 
 # print(dbcon_items.find_allItems(mycursor))
 

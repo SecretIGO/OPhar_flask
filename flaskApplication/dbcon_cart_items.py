@@ -1,5 +1,11 @@
 import dbcon_items
 
+def addCart(id_user, mycursor):
+    query = ("INSERT INTO cart (id_user) VALUES (%s)")
+
+    mycursor.execute(query, (id_user,))
+    mycursor.exectue("COMMIT")
+
 def addItem_toCart(id_item, id_user, quantity, mycursor):
     try:
         query = ("SELECT id FROM cart WHERE id_user = %s")
@@ -36,9 +42,13 @@ def editItemQTY_fromCart(quantity, id_cartItems, mycursor):
 
 def get_userCartItems(id_cartUser, mycursor):
     try:
+        query = ("SELECT id FROM cart WHERE id_user = %s")
+        mycursor.execute(query, (id_cartUser,))
+        db_cart = mycursor.fetchone()[0]
+
         query = ("SELECT id_item FROM cart_items WHERE id_cart = %s")
 
-        mycursor.execute(query, (id_cartUser,))
+        mycursor.execute(query, (db_cart,))
         db_cartID = mycursor.fetchall()
 
         data = []
@@ -72,3 +82,11 @@ def get_userCartItems(id_cartUser, mycursor):
 
     except Exception as e:
         print("Exception error : ", e)
+
+def getItem_quantity(id_user, mycursor):
+    query = ("SELECT quantity FROM cart_items WHERE id_cart = %s")
+
+    mycursor.execute(query, (id_user,))
+    result = mycursor.fetchall()
+    
+    return result
