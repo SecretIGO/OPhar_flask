@@ -3,7 +3,6 @@ import QuantityBtn from './quantitybutton';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
-import { paymongo, PaymongoCheckout } from 'paymongo';
 
 export default function CartContent() {
   const [count, setCount] = useState(1);
