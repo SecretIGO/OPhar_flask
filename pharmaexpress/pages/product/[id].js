@@ -78,7 +78,7 @@ export default function ProductPage() {
             <div className='flex justify-center'>
             <div className={styles.gridLayout}>
                 <div className='flex justify-center'>
-                <div className="bg-blue-300 p-10 border rounded-full shadow-xl">
+                <div className="bg-blue-300 p-10 rounded-full shadow-xl">
                     <Image
                     src={item.image}
                     height={280}

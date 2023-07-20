@@ -1,5 +1,5 @@
 .cartQuantity{
-    @apply flex items-start justify-center border rounded-md text-base;
+    @apply flex items-start justify-center rounded-md text-base;
     width: 130px;
     max-width: 100%;
 }

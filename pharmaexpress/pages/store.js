@@ -23,6 +23,7 @@ function Store() {
   return (
     <div>
       <Header />
+      <h1 className='text-center pt-6 font-bold text-3xl'>All Products</h1>
       <ProductGrid products={items} />
     </div>
   );

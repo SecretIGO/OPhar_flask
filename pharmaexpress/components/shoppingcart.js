@@ -89,9 +89,6 @@ export default function ShoppingCart(){
                 const checkout_url = response.data
                 console.log(checkout_url)
               
-                  // Option 1: similar behavior as an HTTP redirect
-                  window.location.replace(checkout_url);
-              
                   // Option 2: similar behavior as clicking on a link
                   window.location.href = checkout_url;
               })
@@ -155,9 +152,9 @@ export default function ShoppingCart(){
                 ))}
                 {cartItems.length > 0 && (
                     <div className='flex justify-end py-10'>
-                        <a className='w-48 max-w-full h-10 rounded-md tracking-wider bg-blue-600 text-white font-bold mx-2' onClick={handleCheckout} target='_blank'>
+                        <button className='w-48 max-w-full h-10 rounded-md tracking-wider bg-blue-600 text-white font-bold mx-2' onClick={handleCheckout}>
                             Proceed
-                        </a>
+                        </button>
                     </div>
                 )}
             </div>

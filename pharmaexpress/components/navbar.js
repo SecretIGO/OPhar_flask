@@ -37,14 +37,14 @@ export default function Navbar(){
                         </li>
 
                         <li>
-                            <Link href='/orders'>
-                                Orders
+                            <Link href='/store'>
+                                Store
                             </Link>
                         </li>
 
                         <li>
-                            <Link href='/store'>
-                                Store
+                            <Link href='/orders'>
+                                Orders
                             </Link>
                         </li>
 
@@ -57,7 +57,7 @@ export default function Navbar(){
                         {user ? (
                             <li>
                                 <span> | {user} | </span>
-                                <button onClick={handleLogout}>Logout</button>
+                                <Link onClick={handleLogout} href='/home'>Logout</Link>
                             </li>
                             ) : (
                             <li>

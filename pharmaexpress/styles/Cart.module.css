@@ -42,7 +42,7 @@
 }
 
 .cartQuantity{
-    @apply flex items-start justify-center border border-black rounded-md text-base font-bold bg-white;
+    @apply flex items-start justify-center border-black rounded-md text-base font-bold bg-white;
     width: 130px;
     max-width: 100%;
 }

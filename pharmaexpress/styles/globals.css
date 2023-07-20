@@ -16,4 +16,8 @@
   }
 }
 
+html{
+  @apply bg-blue-200
+}
+
 
