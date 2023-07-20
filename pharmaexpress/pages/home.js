@@ -3,7 +3,6 @@ import Header from '../components/navbar.js'
 import NewProducts from '../components/newproducts.js'
 import Data from '../json/Products.json'
 
-
 export default function Home({featuredProduct, newProducts}){
 
   return(

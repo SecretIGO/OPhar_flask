@@ -23,7 +23,7 @@ app.config[ 'MYSQL_DB' ] = "db_onphar"
 mydb =  MySQL(app)
 
 paymongo_secret_key = 'pk_test_1vaiknErtpKCpLKnhkaT37gn'
-paymongo.api.key = paymongo_secret_key
+# paymongo.api.key = paymongo_secret_key
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =

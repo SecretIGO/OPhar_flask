@@ -1,8 +1,8 @@
 import styles from '../styles/ProductBox.module.css'
 
-export default function ProductBox({product,_id}){
+export default function ProductBox({product,id}){
 
-    const url = '/product/' + _id
+    const url = `/product/${id}`
 
     //const cartItems = useContext(cartContext)
 
