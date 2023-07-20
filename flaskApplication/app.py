@@ -120,6 +120,10 @@ def signup():
     status = True
     if(status == True):
         dbcon_user.addUser((firstname, lastname), username, password, email, id_role, mycursor)
+        print(id_role)
+        if (id_role == "1"):
+            id_user = dbcon_user.get_userID(username, mycursor)
+            dbcon_cart_items.addCart(id_user, mycursor)
 
         return({
             'email_error': None,

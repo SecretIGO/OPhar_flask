@@ -1,10 +1,12 @@
 import dbcon_items
 
 def addCart(id_user, mycursor):
-    query = ("INSERT INTO cart (id_user) VALUES (%s)")
+    query = ("INSERT INTO cart (id, id_user) VALUES (NULL, %s);")
 
     mycursor.execute(query, (id_user,))
-    mycursor.exectue("COMMIT")
+    mycursor.execute("COMMIT")
+
+    print("user cart linked!")
 
 def addItem_toCart(id_item, id_user, quantity, mycursor):
     try:
