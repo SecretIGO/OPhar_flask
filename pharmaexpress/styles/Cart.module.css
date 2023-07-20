@@ -2,6 +2,7 @@
     @apply text-2xl font-light;
     display: grid;
     align-items: center;
+    justify-items:center;
     grid-template-columns: 3fr 1fr 1fr 1fr;
     column-gap: .5rem;
 }
@@ -10,9 +11,6 @@
     @apply py-3;
 }
 
-.cartItem{
-    @apply border-t border-solid border-black;
-}
 
 .titles, .product-title{
     padding-left: 0.5rem;
@@ -28,7 +26,7 @@
 }
 
 .imgStyle{
-    width: 200px;
+    width: 180px;
     max-width: 100%;
     margin-right: 1rem;
 }
@@ -41,4 +39,10 @@
 
 .buttonStyle{
     @apply w-48 max-w-full h-10 rounded-md tracking-wider bg-blue-600 text-white font-bold mx-2;
+}
+
+.cartQuantity{
+    @apply flex items-start justify-center border border-black rounded-md text-base font-bold bg-white;
+    width: 130px;
+    max-width: 100%;
 }

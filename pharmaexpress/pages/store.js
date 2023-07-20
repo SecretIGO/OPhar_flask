@@ -1,31 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import Header from '@/components/navbar';
-import ProductGrid from '@/layout/productgrid';
-import axios from 'axios';
+import Header from "@/components/navbar"
+import ProductGrid from "@/layout/productgrid";
+import Data from '../json/Products.json'
 
-function Store() {
-  const [items, setItems] = useState([]);
-
-  useEffect(() => {
-    fetchItems();
-  }, []);
-
-  const fetchItems = async () => {
-    try {
-      const response = await axios.get('http://localhost:8080/api/get_items');
-      console.log(response);
-      setItems(response.data);
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
+export default function Store({products}){
   
-  return (
-    <div>
-      <Header />
-      <ProductGrid products={items} />
-    </div>
-  );
+    return(
+        <div>
+            <Header/>
+            <ProductGrid products={products}/>
+        </div>
+    )
 }
 
-export default Store;
+export function getStaticProps() {
+  
+    const slicedData = Data.slice(0, Data.length + 1)
+    const products = slicedData.sort((a, b) => a.id - b.id)
+  
+    return {
+      props: {
+        products
+      },
+    };
+  }
