@@ -84,7 +84,7 @@ export default function Register(){
             <main>
                 <section className='w-3/4 mx-auto flex flex-col gap-10'>
                     <div>
-                        <h1 className='text-3xl font-bold'>Create Account</h1>
+                        <h1 className='text-3xl font-bold text-white'>Create Account</h1>
                     </div>
 
                     <form className='flex flex-col gap-8 items-center' onSubmit={handleSubmit}>

@@ -37,6 +37,12 @@ export default function Navbar(){
                         </li>
 
                         <li>
+                            <Link href='/orders'>
+                                Orders
+                            </Link>
+                        </li>
+
+                        <li>
                             <Link href='/store'>
                                 Store
                             </Link>

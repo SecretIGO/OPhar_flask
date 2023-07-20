@@ -1,21 +1,13 @@
 import styles from '@/styles/Cart.module.css'
-import QuantityBtn from './quantitybutton';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
-import CartContent from './cartcontent';
 
-export default function ShoppingCart({
-    products,
-    onProductRemove,
-    onQuantityChange,
-}){
-      
-    const [count, setCount] = useState(1);
+export default function ShoppingCart(){
+
     const [cartItems, setCartItems] = useState([]);
     const [quantity, setQuantity] = useState([]);
     const [item_and_quantity, setItemANDQuantity] = useState([])
-    const [paymongo_url, setPaymongoURL] = useState('')
     const cookies = new Cookies();
     const username = cookies.get('username');
 
@@ -53,14 +45,6 @@ export default function ShoppingCart({
         } catch (error) {
         console.error('Error:', error);
         }
-    };
-
-    const addQuantity = () => {
-        setCount(count => count + 1);
-    };
-
-    const minusQuantity = () => {
-        setCount(count => count - 1);
     };
 
     const calculateItemTotal = (price, qty) => {
@@ -171,9 +155,9 @@ export default function ShoppingCart({
                 ))}
                 {cartItems.length > 0 && (
                     <div className='flex justify-end py-10'>
-                        <button className='w-48 max-w-full h-10 rounded-md tracking-wider bg-blue-600 text-white font-bold mx-2' onClick={handleCheckout}>
+                        <a className='w-48 max-w-full h-10 rounded-md tracking-wider bg-blue-600 text-white font-bold mx-2' onClick={handleCheckout} target='_blank'>
                             Proceed
-                        </button>
+                        </a>
                     </div>
                 )}
             </div>
