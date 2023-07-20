@@ -68,14 +68,22 @@ def remove_itemsInCart(id_user, mycursor):
     mycursor.execute(query, (id_cart,))
     mycursor.execute("COMMIT")
 
-def get_userPackage(uni_uid, mycursor):
-    query = ("SELECT id FROM order WHERE uni_id = %s")
+def get_userPackages(id_user, mycursor):
+    query = ("SELECT id_package FROM order_package WHERE id_user = %s")
+    mycursor.execute(query, (id_user,))
+    id_package = mycursor.fetchone()[0]
+    
+    query = ("SELECT id_package FROM orders WHERE id = %s")
+    mycursor.execute(query, (id_package,))
+    uni_uid = mycursor.fetchone()[0]
+
+    return uni_uid
+
+def get_packageDetails(uni_uid, mycursor):
+    query = ("SELECT id FROM orders WHERE id_package = %s")
     mycursor.execute(query, (uni_uid,))
     id_package = mycursor.fetchone()[0]
 
-    return id_package
-
-def get_packageDetails(id_package, mycursor):
     query = ("SELECT * FROM order_package WHERE id_package = %s")
     mycursor.execute(query, (id_package,))
     packageDetails = mycursor.fetchall()
