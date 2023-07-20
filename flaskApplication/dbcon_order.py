@@ -71,13 +71,17 @@ def remove_itemsInCart(id_user, mycursor):
 def get_userPackages(id_user, mycursor):
     query = ("SELECT id_package FROM order_package WHERE id_user = %s")
     mycursor.execute(query, (id_user,))
-    id_package = mycursor.fetchone()[0]
+    id_packages = mycursor.fetchall()
     
-    query = ("SELECT id_package FROM orders WHERE id = %s")
-    mycursor.execute(query, (id_package,))
-    uni_uid = mycursor.fetchone()[0]
+    uni_uids = set()
+    for package in id_packages:
+        query = ("SELECT id_package FROM orders WHERE id = %s")
+        mycursor.execute(query, (package[0],))
+        uni_uid = mycursor.fetchone()[0]
 
-    return uni_uid
+        uni_uids.add(uni_uid)
+
+    return uni_uids
 
 def get_packageDetails(uni_uid, mycursor):
     query = ("SELECT id FROM orders WHERE id_package = %s")
@@ -98,6 +102,7 @@ def get_packageItems(packageDetails, mycursor):
         query = ("SELECT * FROM items WHERE id = %s")
         mycursor.execute(query, (packageDetails[i][2],))
         db_items = mycursor.fetchall()
+
         for item in db_items:
             str_category = dbcon_items.determine_category(item[3])
             data = {
@@ -105,10 +110,7 @@ def get_packageItems(packageDetails, mycursor):
                 'name' : item[1],
                 'price' : item[2],
                 'category' : str_category,
-                'remaining_stock' : item[5],
-                'description' : item[6],
-                'item_dateListed' : item[7],
-                'rating' : item[8],
+                'quantity' : packageDetails[i][3]
             }
         items.insert(i, data)
         i+=1

@@ -359,16 +359,38 @@ def cart_to_order():
     except Exception as e:
         print("Error exception : ", e)
 
-@app.route('/api/get_orderDetails', methods = ['POST'])
+@app.route('/api/get_uni_uids', methods=['POST'])
+def get_uni_uids():
+    mycursor = mydb.connection.cursor()
+    data = request.get_json()
+    username = data['username']
+    id_user = dbcon_user.get_userID(username, mycursor)
+
+    uni_uids = dbcon_order.get_userPackages(id_user, mycursor)
+    print(uni_uids)
+
+    return uni_uids
+
+@app.route('/api/get_orderItems', methods = ['POST'])
 def get_orderItems():
     mycursor = mydb.connection.cursor()
     data = request.get_json()
     username = data['username']
     id_user = dbcon_user.get_userID(username, mycursor)
 
-    
+    uni_uids = dbcon_order.get_userPackages(3, mycursor)
+    print(uni_uids)
 
-    
+    items = []
+    i = 0
+    for uni_uid in uni_uids:
+        packages = dbcon_order.get_packageDetails(uni_uid, mycursor)
+        for package in packages:
+            items.insert(i, dbcon_order.get_packageItems(packages, mycursor))
+
+        i+=1
+
+    return jsonify(items)
     
 if __name__ == '__main__':
     app.run(debug=True, port=8080)

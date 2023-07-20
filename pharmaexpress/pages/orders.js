@@ -15,7 +15,7 @@ export default function Orders(){
         
     const fetchItems = async () => {
         try {
-            const response = await axios.post('http://localhost:8080/api/get_orderDetails', { username });
+            const response = await axios.post('http://localhost:8080/api/get_orderItems', { username });
             console.log(response);
             setOrderItems(response.data);
         } catch (error) {
@@ -23,21 +23,24 @@ export default function Orders(){
         }
     };
 
-    
+    console.log(orderItems)
 
     return(
         <div>
             <Header/>
             <h1 className="font-bold text-3xl uppercase text-center py-8">Orders</h1>
             <div className={styles.layout}>
-                <div className="w-full text-center">
-                    <h1 className="text-xl font-bold py-4">To be Packaged</h1>
-                    <div className="flex justify-center h-full">
-                        <div className={styles.orderLayout}>
-                            <h1>Order ID</h1>
-                            <h1>Products</h1>
-                            <h1>Amount</h1>
-                        </div>
+            <div className="w-full text-center">
+            <h1 className="text-xl font-bold py-4">To be Packaged</h1>
+                <div className="flex justify-center h-full">
+                {Array.isArray(orderItems) && orderItems.length > 0 && orderItems.map((item, index) => (
+                    <div className={styles.orderLayout} key={index}>
+                    <h1>Order ID</h1>
+                    <h1>{item.id}</h1>
+                    <h1>Amount</h1>
+                    <h1>{item.price}</h1>
+                    </div>
+                ))}
                     </div>
                 </div>
                 <div className="w-full text-center">

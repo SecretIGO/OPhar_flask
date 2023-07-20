@@ -17,13 +17,26 @@ mydb = pymysql.connect(
   database="db_onphar"
 )
 
-
 mycursor = mydb.cursor()
 
-package = dbcon_order.get_packageDetails(1, mycursor)
-print(package)
-items = dbcon_order.get_packageItems(package, mycursor)
+uni_uids = dbcon_order.get_userPackages(3, mycursor)
+print(uni_uids)
+
+items = []
+i = 0
+for uni_uid in uni_uids:
+    packages = dbcon_order.get_packageDetails(uni_uid, mycursor)
+    for package in packages:
+      items.insert(i, dbcon_order.get_packageItems(packages, mycursor))
+
+    i+=1
+
 print(items)
+
+# package = dbcon_order.get_packageDetails(1, mycursor)
+# print(package)
+# items = dbcon_order.get_packageItems(package, mycursor)
+# print(items)
 
 # random_uuid = uuid.uuid4()
 # print(random_uuid)

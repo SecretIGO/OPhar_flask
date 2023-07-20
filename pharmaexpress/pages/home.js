@@ -6,6 +6,7 @@ import Header from '../components/navbar.js'
 import NewProducts from '../components/newproducts.js'
 
 export default function Home(){
+  const [uuids, setUuids] = useState([])
   const [items, setItems] = useState([]);
   const [featuredProduct, setFeaturedProduct] = useState(null);
 
