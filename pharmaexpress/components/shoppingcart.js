@@ -95,23 +95,24 @@ export default function ShoppingCart({
         }
     };
 
-    const handleCheckout = () => {
+    const handleCheckout = async () => {
         try {
-            axios.post(
-                'http://localhost:8080/api/checkout_system',{ item_and_quantity }
-              ).then(function(response) {
-                
-                // Parsing the response and redirecting the customer for authentication
-                const checkout_url = response.data
-                console.log(checkout_url)
-              
-                  // Option 1: similar behavior as an HTTP redirect
-                  window.location.replace(checkout_url);
-              
-                  // Option 2: similar behavior as clicking on a link
-                  window.location.href = checkout_url;
-              })
-              
+            const response = await axios.post('http://localhost:8080/api/checkout_system', { item_and_quantity });
+            const checkout_url = response.data;
+    
+            await axios.post('http://localhost:8080/api/cart_to_order', { username }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            // Parsing the response and redirecting the customer for authentication
+            console.log(checkout_url)
+          
+            // Option 1: similar behavior as an HTTP redirect
+            window.location.replace(checkout_url);
+        
+            // Option 2: similar behavior as clicking on a link
+            window.location.href = checkout_url;
         }
         catch (error) {
             console.error('Error:', error);

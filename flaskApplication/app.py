@@ -6,10 +6,12 @@ from paymongo_local import paymongo_checkoutSystem
 from datetime import date
 import json
 import os
+import uuid
 
 import dbcon_user
 import dbcon_items
 import dbcon_cart_items
+import dbcon_order
 import session
 
 app = Flask(__name__)
@@ -332,6 +334,39 @@ def checkout():
             return(f"Error: API request failed with status code {response.status_code}.")
     except Exception as e:
         print("Error exception : ", e)
+
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# O R D E R S
+
+@app.route('/api/cart_to_order', methods = ['POST'])
+def cart_to_order():
+    mycursor = mydb.connection.cursor()
+    data = request.get_json()
+    username = data['username']
+    print(username)
+    id_user = dbcon_user.get_userID(username, mycursor)
+    print(id_user)
+    try:
+        random_uuid = uuid.uuid4()
+        print('\n',random_uuid)
+        dbcon_order.addPackage(random_uuid, mycursor)
+        dbcon_order.cart_to_order(id_user, random_uuid, mycursor)
+        dbcon_order.remove_itemsInCart(id_user, mycursor)
+
+        return jsonify({'success' : True})
+
+    except Exception as e:
+        print("Error exception : ", e)
+
+@app.route('/api/get_orderDetails', methods = ['POST'])
+def get_orderItems():
+    mycursor = mydb.connection.cursor()
+    data = request.get_json()
+    username = data['username']
+    id_user = dbcon_user.get_userID(username, mycursor)
+
+    
     
 if __name__ == '__main__':
     app.run(debug=True, port=8080)

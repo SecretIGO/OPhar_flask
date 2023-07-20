@@ -1,12 +1,14 @@
 import pymysql
 import sys
 import os
+import uuid
 
 import dbcon_items
 import dbcon_store
 import dbcon_user
 import dbcon_cart_items
 from paymongo_local import paymongo_checkoutSystem
+import dbcon_order
 
 mydb = pymysql.connect(
   host="127.0.0.1",
@@ -18,7 +20,18 @@ mydb = pymysql.connect(
 
 mycursor = mydb.cursor()
 
-paymongo_checkoutSystem.paymongo_createSession()
+package = dbcon_order.get_packageDetails(1, mycursor)
+print(package)
+items = dbcon_order.get_packageItems(package, mycursor)
+print(items)
+
+# random_uuid = uuid.uuid4()
+# print(random_uuid)
+# dbcon_order.addPackage(random_uuid, mycursor)
+# dbcon_order.cart_to_order(3, random_uuid, mycursor)
+# dbcon_order.remove_itemsInCart(3, mycursor)
+
+# paymongo_checkoutSystem.paymongo_createSession()
 
 # print(dbcon_items.get_itemDetails(41, mycursor))
 
