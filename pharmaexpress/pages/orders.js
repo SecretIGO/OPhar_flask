@@ -11,17 +11,19 @@ export default function Orders(){
 
     useEffect(() => {
         fetchItems();
-      }, []);
-    
-      const fetchItems = async () => {
+        }, []);
+        
+    const fetchItems = async () => {
         try {
-          const response = await axios.post('http://localhost:8080/api/get_orderDetails');
-          console.log(response);
-          setOrderItems(response.data);
+            const response = await axios.post('http://localhost:8080/api/get_orderDetails', { username });
+            console.log(response);
+            setOrderItems(response.data);
         } catch (error) {
-          console.error('Error:', error);
+            console.error('Error:', error);
         }
-      };
+    };
+
+    
 
     return(
         <div>
