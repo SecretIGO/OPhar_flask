@@ -1,0 +1,13 @@
+.layout{
+    @apply h-screen;
+    display: grid;
+    justify-items: center;
+    grid-template-columns: 1fr 1fr;
+}
+
+.orderLayout{
+    @apply bg-blue-600 w-4/5 rounded-md h-1/4 grid place-items-center;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 1rem;
+}
