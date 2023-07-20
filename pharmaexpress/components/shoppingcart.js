@@ -11,7 +11,6 @@ export default function ShoppingCart({
     onQuantityChange,
 }){
       
-    const [count, setCount] = useState(1);
     const [cartItems, setCartItems] = useState([]);
     const [quantity, setQuantity] = useState([]);
     const [item_and_quantity, setItemANDQuantity] = useState([])
