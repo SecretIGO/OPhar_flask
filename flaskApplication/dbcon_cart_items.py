@@ -21,11 +21,15 @@ def addItem_toCart(id_item, id_user, quantity, mycursor):
     except Exception as e:
         print("Exception error : ", e)
 
-def removeItem_fromCart(id_cartItems, mycursor):
+def removeItem_fromCart(id_item, id_user, mycursor):
     try:
-        query = ("DELETE FROM cart_items WHERE cart_items.id = %s")
+        query = ("SELECT id FROM cart WHERE id_user = %s")
+        mycursor.execute(query, (id_user,))
+        id_cart = mycursor.fetchone()[0]
+        
+        query = ("DELETE FROM cart_items WHERE id_item = %s AND id_cart = %s")
 
-        mycursor.execute(query, (id_cartItems,))
+        mycursor.execute(query, (id_item, id_cart))
         mycursor.execute("COMMIT")
     except Exception as e:
         print("Exception error : ", e)

@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_mysqldb import MySQL
 from flask_cors import CORS
-import paymongo
+import requests
+from paymongo_local import paymongo_checkoutSystem
 from datetime import date
 import json
 import os
@@ -23,7 +24,6 @@ app.config[ 'MYSQL_DB' ] = "db_onphar"
 mydb =  MySQL(app)
 
 paymongo_secret_key = 'pk_test_1vaiknErtpKCpLKnhkaT37gn'
-# paymongo.api.key = paymongo_secret_key
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -270,6 +270,20 @@ def get_cartItems():
     
     return 'Invalid request'
 
+@app.route('/api/remove_cartItem', methods=[ 'POST' ] )
+def remove_cartItem():
+    mycursor = mydb.connection.cursor()
+
+    if request.method == 'POST':
+        data = request.get_json()
+        username = data['username']
+        id_item = data['id_item']
+        id_user = dbcon_user.get_userID(username, mycursor)
+
+        dbcon_cart_items.removeItem_fromCart(id_item, id_user, mycursor)
+
+        return jsonify({'success' : True})
+
 @app.route('/api/get_itemQuantity', methods = ['GET', 'POST'])
 def get_itemQuantity():
     mycursor = mydb.connection.cursor()
@@ -279,87 +293,41 @@ def get_itemQuantity():
         username = data['username']
         id_user = dbcon_user.get_userID(username, mycursor)
         result = dbcon_cart_items.getItem_quantity(id_user, mycursor)
+
         return jsonify(result)
     
     return 'Invalid request'
 
-@app.route('/api/create_checkout_session', methods=['POST'])
-def create_checkout_session():
-    data = request.get_json()
-    subtotal = data['subtotal']
+@app.route('/api/checkout_system', methods=['POST', 'GET'])
+def checkout():
+    try:
+        data = request.get_json()
+        print(data['item_and_quantity'])
+        
+        url = "https://api.paymongo.com/v1/checkout_sessions"
 
-    # Set api key config
-    paymongo.api_key='sk_test_2byzkVErtpKCpLK9hkFT37gn'
+        payload = { "data": { "attributes": {
+                    "line_items": data['item_and_quantity'],
+                    "payment_method_types": ["gcash", "paymaya", "card"],
+                    "send_email_receipt": True
+                } } }
+        headers = {
+            "accept": "application/json",
+            "content-type": "application/json",
+            "authorization": "Basic c2tfdGVzdF9pc2tSTVBuN3g4TjVWSm5YYm1TanU2NWg6"
+        }
+        response = requests.post(url, json=payload, headers=headers)
 
-    # Payment Method
-    payment_method = paymongo.PaymentMethod.retrieve('pm_...')
-
-    # Retrieve attributes
-    payment_method.id = "pm_..."
-
-    payment_method.type = "card"
-
-    paymongo.PaymentMethod.create({
-    'type': 'card',
-    'details': {
-        'card_number': '5111111111111118',
-        'cvc': '123',
-        'exp_month': 3,
-        'exp_year': 2025,
-    },
-    'billing': {
-        'address': {
-        'line1': 'test line 1',
-        'line2': 'test line 2',
-        'city': 'Antipolo',
-        'state': 'Rizal',
-        'postal_code': '1870',
-        'country': 'PH'
-        },
-        'email': 'test@paymongo.com',
-        'name': 'Pay Mongo',
-        'phone': '09123456789'
-    }
-    })
-
-    # Payment Intent
-    paymongo.PaymentIntent.retrieve('pi_...')
-
-    payment_intent = paymongo.PaymentIntent.create({
-    'amount': 10000,
-    'currency': 'PHP',
-    'description': 'Dog Treat',
-    'payment_method_allowed': [
-        'card'
-    ],
-    'statement_descriptor': 'BarkerShop'
-    })
-
-    paymongo.PaymentIntent.attach('pi_...', {
-    'payment_method': 'pm_...',
-    'return_url': 'https://test/success'
-    })
-
-    paymongo.PaymentIntent.cancel('pi_...')
-
-    paymongo.PaymentIntent.capture('pi_...', {
-    'amount':10000
-    })
-
-    # Payment
-    paymongo.Payment.retrieve('pay_...')
-
-    # Refund
-    paymongo.Refund.retrieve('ref_...')
-
-    paymongo.Refund.create({
-    'amount': 10000,
-    'payment_id': 'pay_...',
-    'reason': 'requested_by_customer',
-    'metadata': {
-        'merchant': 'test value'
-    }
-    })
-
+        if response.status_code == 200:
+            data = response.json()
+            checkout_session_id = data["data"]["id"]
+            checkout_url = data["data"]["attributes"]["checkout_url"]
+            print(checkout_url)
+            return(checkout_url)
+        else:
+            return(f"Error: API request failed with status code {response.status_code}.")
+    except Exception as e:
+        print("Error exception : ", e)
+    
 if __name__ == '__main__':
     app.run(debug=True, port=8080)

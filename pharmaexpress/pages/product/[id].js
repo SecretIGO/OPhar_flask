@@ -90,6 +90,8 @@ export default function ProductPage() {
                 <div className='py-6'>
                     <h1 className="text-4xl font-bold">{item.name}</h1>
                     <h2 className="text-2xl font-light">{item.category}</h2>
+                    <p>____________________________________</p>
+                    <h2 className="text-5xl font-bold">P{item.price}.00</h2>
                 </div>
                 <h2 className="text-2xl">In stock: {item.remaining_stock}</h2>
                 <div className="my-6">

@@ -10,9 +10,12 @@ export default function ShoppingCart({
     onProductRemove,
     onQuantityChange,
 }){
+      
     const [count, setCount] = useState(1);
     const [cartItems, setCartItems] = useState([]);
     const [quantity, setQuantity] = useState([]);
+    const [item_and_quantity, setItemANDQuantity] = useState([])
+    const [paymongo_url, setPaymongoURL] = useState('')
     const cookies = new Cookies();
     const username = cookies.get('username');
 
@@ -20,6 +23,19 @@ export default function ShoppingCart({
         fetchCartItems();
         fetchItemQuantity();
     }, []);
+
+    useEffect(() => {
+        if (cartItems.length > 0 && quantity.length > 0) {
+            const item_purchaseDetails = cartItems.map((item, index) => ({
+                currency: "PHP",
+                name: item.name,
+                amount: item.price * 100,
+                quantity: quantity[index][0]
+            }));
+    
+            setItemANDQuantity(item_purchaseDetails);
+        }
+    }, [cartItems, quantity]);
 
     const fetchCartItems = async () => {
         try {
@@ -64,10 +80,44 @@ export default function ShoppingCart({
 
     const subtotal = calculateSubtotal();
 
-    const handleRemoveCartItem = () => {
-        
+    const handleRemoveCartItem = async (id_item) => {
+        try {
+            const response = await axios.post('http://localhost:8080/api/remove_cartItem', { username, id_item });
+            console.log(response.data);
+            const { success } = response.data;
+            if (success) {
+                window.location.reload();
+            } else {
+                setError('Item does not Exist!');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
+    const handleCheckout = () => {
+        try {
+            axios.post(
+                'http://localhost:8080/api/checkout_system',{ item_and_quantity }
+              ).then(function(response) {
+                
+                // Parsing the response and redirecting the customer for authentication
+                const checkout_url = response.data
+                console.log(checkout_url)
+              
+                  // Option 1: similar behavior as an HTTP redirect
+                  window.location.replace(checkout_url);
+              
+                  // Option 2: similar behavior as clicking on a link
+                  window.location.href = checkout_url;
+              })
+              
+        }
+        catch (error) {
+            console.error('Error:', error);
+        }
+    };
+    
     return(
         <div className='px-10 overflow-hidden'>
             <div className="py-12 font-bold text-4xl text-center">
@@ -87,8 +137,8 @@ export default function ShoppingCart({
                         <h2>Total</h2>
                     </div>
                 )}
-
                 {Array.isArray(cartItems) && cartItems.length > 0 && cartItems.map((item, index) => (
+                    
                     <div className={styles.cartItem} key={item.id}>
                         <div className="flex w-full">
 
@@ -98,8 +148,7 @@ export default function ShoppingCart({
                                 <h3 className='text-xl'>{item.name}</h3>
                                 <button 
                                     className='text-orange-600 text-sm hover:text-orange-400 font-medium'
-                                    onClick={() => onProductRemove(product)
-                                }>
+                                    onClick={() => handleRemoveCartItem(item.id)}>
                                 Remove
                                 </button>
                             </div>   
@@ -122,7 +171,7 @@ export default function ShoppingCart({
                 ))}
                 {cartItems.length > 0 && (
                     <div className='flex justify-end py-10'>
-                        <button className='w-48 max-w-full h-10 rounded-md tracking-wider bg-blue-600 text-white font-bold mx-2'>
+                        <button className='w-48 max-w-full h-10 rounded-md tracking-wider bg-blue-600 text-white font-bold mx-2' onClick={handleCheckout}>
                             Proceed
                         </button>
                     </div>
