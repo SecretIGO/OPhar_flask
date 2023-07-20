@@ -8,14 +8,14 @@ export default function Orders(){
     const [orderItems, setOrderItems] = useState([]);
     const cookies = new Cookies();
     const username = cookies.get('username');
-    
+
     useEffect(() => {
         fetchItems();
       }, []);
     
       const fetchItems = async () => {
         try {
-          const response = await axios.post('http://localhost:8080/api/get_orderDetails'), { username };
+          const response = await axios.post('http://localhost:8080/api/get_orderDetails');
           console.log(response);
           setOrderItems(response.data);
         } catch (error) {
