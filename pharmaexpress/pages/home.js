@@ -4,7 +4,6 @@ import axios from 'axios';
 import Featured from '@/components/featuredproduct.js'
 import Header from '../components/navbar.js'
 import NewProducts from '../components/newproducts.js'
-import Data from '../json/Products.json'
 
 export default function Home(){
   const [items, setItems] = useState([]);

@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import styles from '../styles/ProductBox.module.css'
-import Image from 'next/image';
 
 export default function ProductBox({product}){
 
